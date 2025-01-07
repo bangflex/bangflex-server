@@ -2,9 +2,11 @@ version: "3.8"
 services:
   springboot-app:
     build:
-      context: .
+      context: ./springboot/
     ports:
       - "8080:8080"
+    networks:
+      - monitoring
 
   prometheus:
     image: prom/prometheus:latest
