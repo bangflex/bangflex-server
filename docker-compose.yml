@@ -8,6 +8,13 @@ services:
     networks:
       - monitoring
 
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - monitoring
+
   prometheus:
     image: prom/prometheus:latest
     volumes:
