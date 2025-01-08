@@ -23,6 +23,10 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(authorize ->
                 authorize
                         .requestMatchers("/**").permitAll()
+//                        .requestMatchers("/api/v1/check/**").permitAll()
+//                        .requestMatchers("/api/v1/auth/**").permitAll()
+//                        .requestMatchers("/swagger-ui/**").permitAll()
+//                        .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();
