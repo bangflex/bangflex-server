@@ -1,16 +1,18 @@
-package springbootmonolithic.domain.member.command.domain.aggregate.entity;
+package springbootmonolithic.domain.report.command.domain.aggregate.entity;
+
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import springbootmonolithic.common.domain.report.ReportType;
 
 @Entity
-@Table(name = "member")
+@Table(name = "report")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member {
+public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code")
@@ -31,38 +33,37 @@ public class Member {
     private String createdAt;
 
     @Column(
-            name = "updated_at",
+            name = "target_code",
             nullable = false,
             unique = false
     )
-    private String updatedAt;
-
-
-    @Column(
-            name = "email",
-            nullable = false,
-            unique = true
-    )
-    private String email;
+    private int targetCode;
 
     @Column(
-            name = "password",
+            name = "type",
             nullable = false,
             unique = false
     )
-    private String password;
+    private ReportType type;
 
     @Column(
-            name = "nickname",
+            name = "reason",
             nullable = false,
-            unique = true
-    )
-    private String nickname;
-
-    @Column(
-            name = "image",
-            nullable = true,
             unique = false
     )
-    private String image;
+    private String reason;
+
+    @Column(
+            name = "detail",
+            nullable = false,
+            unique = false
+    )
+    private String detail;
+
+    @Column(
+            name = "reporter",
+            nullable = false,
+            unique = false
+    )
+    private int reporter;
 }
