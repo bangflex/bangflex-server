@@ -71,35 +71,35 @@ public class Review {
             nullable = false,
             unique = false
     )
-    private int level;
+    private String level;
 
     @Column(
             name = "horror_level",
             nullable = false,
             unique = false
     )
-    private int horrorLevel;
+    private String horrorLevel;
 
     @Column(
             name = "activity",
             nullable = false,
             unique = false
     )
-    private int activity;
+    private String activity;
 
     @Column(
             name = "interior",
             nullable = false,
             unique = false
     )
-    private int interior;
+    private String interior;
 
     @Column(
             name = "probability",
             nullable = false,
             unique = false
     )
-    private int probability;
+    private String probability;
 
     @Column(
             name = "content",

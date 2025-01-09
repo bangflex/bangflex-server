@@ -7,15 +7,15 @@ public enum ReportType {
     COMMENT(3, "COMMENT")
     ;
 
-    private int order;
-    private String value;
+    private final int order;
+    private final String value;
 
     ReportType(
             int order,
             String value
     ) {
-        order = this.order;
-        value = this.value;
+        this.order = order;
+        this.value = value;
     }
 
     public int getOrder() {
