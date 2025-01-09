@@ -1,4 +1,4 @@
-package springbootmonolithic.domain.auth.command.domain.aggregate.entity;
+package springbootmonolithic.domain.member.command.domain.aggregate.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
