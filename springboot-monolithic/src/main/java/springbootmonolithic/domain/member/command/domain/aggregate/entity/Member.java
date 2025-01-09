@@ -65,5 +65,4 @@ public class Member {
             unique = false
     )
     private String image;
-
 }

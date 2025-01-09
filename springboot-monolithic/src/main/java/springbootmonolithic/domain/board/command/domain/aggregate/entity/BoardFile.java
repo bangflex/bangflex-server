@@ -1,5 +1,6 @@
 package springbootmonolithic.domain.board.command.domain.aggregate.entity;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,22 +8,15 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name = "board")
+@Table(name = "board_file")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Board {
+public class BoardFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code")
     private int code;
-
-    @Column(
-            name = "active",
-            nullable = false,
-            unique = false
-    )
-    private boolean active;
 
     @Column(
             name = "created_at",
@@ -32,30 +26,16 @@ public class Board {
     private String createdAt;
 
     @Column(
-            name = "updated_at",
+            name = "url",
             nullable = false,
             unique = false
     )
-    private String updatedAt;
+    private String url;
 
     @Column(
-            name = "title",
+            name = "board_code",
             nullable = false,
             unique = false
     )
-    private String title;
-
-    @Column(
-            name = "content",
-            nullable = false,
-            unique = false
-    )
-    private String content;
-
-    @Column(
-            name = "member_code",
-            nullable = false,
-            unique = false
-    )
-    private int memberCode;
+    private int boardCode;
 }
