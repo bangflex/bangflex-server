@@ -5,14 +5,16 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import lombok.Setter;
 
 @Entity
 @Table(name = "board_file")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardFile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code")
@@ -32,10 +34,11 @@ public class BoardFile {
     )
     private String url;
 
-    @Column(
-            name = "board_code",
-            nullable = false,
-            unique = false
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+                name = "board_code",
+                nullable = false,
+                unique = false
     )
-    private int boardCode;
+    private Board board;
 }

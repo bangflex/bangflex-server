@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;
 
+import java.util.List;
 
 @Entity
 @Table(name = "board")
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Board {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code")
@@ -52,10 +55,15 @@ public class Board {
     )
     private String content;
 
-    @Column(
-            name = "member_code",
-            nullable = false,
-            unique = false
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+                name = "member_code",
+                nullable = false,
+                unique = false
     )
-    private int memberCode;
+    private Member member;
+
+    // 첨부파일과의 관계 설정
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<BoardFile> boardFiles;
 }
