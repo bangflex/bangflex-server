@@ -1,9 +1,7 @@
 package springbootmonolithic.domain.board.command.domain.aggregate.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;
 
 import java.util.List;
@@ -11,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "board")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Board {
