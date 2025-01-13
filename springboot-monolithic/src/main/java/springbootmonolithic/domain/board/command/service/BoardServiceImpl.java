@@ -9,7 +9,10 @@ import springbootmonolithic.domain.board.command.domain.aggregate.entity.BoardFi
 import springbootmonolithic.domain.board.command.dto.BoardCreateDTO;
 import springbootmonolithic.domain.board.command.repository.BoardFileRepository;
 import springbootmonolithic.domain.board.command.repository.BoardRepository;
+import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;
+import springbootmonolithic.domain.member.command.repository.MemberRepository;
 import springbootmonolithic.exception.InvalidDataException;
+import springbootmonolithic.exception.MemberNotFoundException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,20 +29,25 @@ public class BoardServiceImpl implements BoardService {
     private final ModelMapper modelMapper;
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
     public BoardServiceImpl(ModelMapper modelMapper,
                             BoardRepository boardRepository,
-                            BoardFileRepository boardFileRepository) {
+                            BoardFileRepository boardFileRepository,
+                            MemberRepository memberRepository) {
         this.modelMapper = modelMapper;
         this.boardRepository = boardRepository;
         this.boardFileRepository = boardFileRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
     public int createBoard(BoardCreateDTO newBoard, List<MultipartFile> images) throws IOException {
 
         // 작성자가 회원이 아니라면 오류 발생
+        Member author = memberRepository.findById(newBoard.getMemberCode())
+                        .orElseThrow(() -> new MemberNotFoundException("서비스의 회원이 아닙니다."));
 
         // 제목이나 내용이 null이면 오류 발생
         if (newBoard.getTitle() == null) {
@@ -49,16 +57,24 @@ public class BoardServiceImpl implements BoardService {
         }
 
         // 게시글 저장
-        Board board = modelMapper.map(newBoard, Board.class);
-        board.setActive(true);
-        board.setCreatedAt(String.valueOf(LocalDateTime.now()));
-//        board.setMember();    // 작성자 저장
+        Board board = Board.builder()
+                        .active(true)
+                        .createdAt(String.valueOf(LocalDateTime.now()))
+                        .title(newBoard.getTitle())
+                        .content(newBoard.getContent())
+                        .member(author)
+                        .build();
+
         Board savedBoard = boardRepository.save(board);
 
         // 첨부된 이미지 파일이 있으면 저장
         if (images != null) {
             List<BoardFile> addedImages = saveFiles(images, savedBoard);
-            savedBoard.setBoardFiles(addedImages);
+
+            boardRepository.save(savedBoard.toBuilder()
+                                    .boardFiles(addedImages)
+                                    .build()
+            );
         }
 
         // 저장된 게시글 코드 반환
