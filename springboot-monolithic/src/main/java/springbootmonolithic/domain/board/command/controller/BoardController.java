@@ -48,4 +48,14 @@ public class BoardController {
 
         return ResponseEntity.ok(new ResponseMessage<>(200, "게시글 수정 성공", boardCode));
     }
+
+    @DeleteMapping("/{boardCode}")
+    @Operation(summary = "커뮤니티 게시글 삭제 API")
+    public ResponseEntity<ResponseMessage<Object>> deleteBoard(@PathVariable int boardCode,
+                                                               @RequestParam int memberCode) {
+
+        boardService.deleteBoard(boardCode, memberCode);        // 로그인 적용 시 수정 필요
+
+        return ResponseEntity.ok(new ResponseMessage<>(200, "게시글 삭제 성공", null));
+    }
 }

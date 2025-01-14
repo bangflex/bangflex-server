@@ -166,4 +166,25 @@ public class BoardServiceImpl implements BoardService {
             );
         }
     }
+
+    @Transactional
+    @Override
+    public void deleteBoard(int boardCode, int memberCode) {
+
+        // 존재하지 않거나 이미 삭제된 게시글이면 오류 발생
+        Board board = boardRepository.findById(boardCode)
+                .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시글입니다."));
+
+        if (!board.isActive()) throw new BoardNotFoundException("삭제된 게시글입니다.");
+
+        // 게시글 작성자가 아니라면 오류 발생
+        if (memberCode != board.getMember().getCode())
+            throw new InvalidMemberException("게시글 삭제 권한이 없습니다.");
+
+        // 게시글 비활성화 처리
+        boardRepository.save(board.toBuilder()
+                                .active(false)
+                                .updatedAt(parsedLocalDateTime)
+                                .build());
+    }
 }
