@@ -1,5 +1,6 @@
 package springbootmonolithic.domain.board.command.service;
 
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -42,6 +44,9 @@ public class BoardServiceImpl implements BoardService {
         this.memberRepository = memberRepository;
     }
 
+    String parsedLocalDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+
+    @Transactional
     @Override
     public int createBoard(BoardCreateDTO newBoard, List<MultipartFile> images) throws IOException {
 
@@ -59,7 +64,7 @@ public class BoardServiceImpl implements BoardService {
         // 게시글 저장
         Board board = Board.builder()
                         .active(true)
-                        .createdAt(String.valueOf(LocalDateTime.now()))
+                        .createdAt(parsedLocalDateTime)
                         .title(newBoard.getTitle())
                         .content(newBoard.getContent())
                         .member(author)
@@ -102,14 +107,14 @@ public class BoardServiceImpl implements BoardService {
             Files.createDirectories(path.getParent());
             Files.write(path, file.getBytes());
 
-            BoardFile addedImages = boardFileRepository.save(BoardFile.builder()
-                                    .createdAt(String.valueOf(LocalDateTime.now()))
+            BoardFile addedImage = boardFileRepository.save(BoardFile.builder()
+                                    .createdAt(parsedLocalDateTime)
                                     .url(dbUrl)
                                     .board(savedBoard)
                                     .build()
             );
 
-            boardFiles.add(addedImages);
+            boardFiles.add(addedImage);
         }
 
         return boardFiles;

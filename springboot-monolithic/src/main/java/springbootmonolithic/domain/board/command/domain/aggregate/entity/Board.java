@@ -35,7 +35,7 @@ public class Board {
 
     @Column(
             name = "updated_at",
-            nullable = false,
+            nullable = true,
             unique = false
     )
     private String updatedAt;
