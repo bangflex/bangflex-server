@@ -8,11 +8,14 @@ import org.springframework.web.multipart.MultipartFile;
 import springbootmonolithic.domain.board.command.domain.aggregate.entity.Board;
 import springbootmonolithic.domain.board.command.domain.aggregate.entity.BoardFile;
 import springbootmonolithic.domain.board.command.dto.BoardCreateDTO;
+import springbootmonolithic.domain.board.command.dto.BoardUpdateDTO;
 import springbootmonolithic.domain.board.command.repository.BoardFileRepository;
 import springbootmonolithic.domain.board.command.repository.BoardRepository;
 import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;
 import springbootmonolithic.domain.member.command.repository.MemberRepository;
+import springbootmonolithic.exception.BoardNotFoundException;
 import springbootmonolithic.exception.InvalidDataException;
+import springbootmonolithic.exception.InvalidMemberException;
 import springbootmonolithic.exception.MemberNotFoundException;
 
 import java.io.IOException;
@@ -118,5 +121,49 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return boardFiles;
+    }
+
+    @Transactional
+    @Override
+    public void updateBoard(int boardCode,
+                            BoardUpdateDTO modifiedBoard,
+                            List<MultipartFile> images) throws IOException {
+
+        // 존재하지 않거나 삭제된 게시글이면 오류 발생
+        Board board = boardRepository.findById(boardCode)
+                        .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시글입니다."));
+
+        if (!board.isActive()) throw new BoardNotFoundException("삭제된 게시글입니다.");
+
+        // 게시글 작성자가 아니라면 오류 발생
+        if (modifiedBoard.getMemberCode() != board.getMember().getCode())
+            throw new InvalidMemberException("게시글 수정 권한이 없습니다.");
+
+        // 제목이나 내용이 null이면 오류 발생
+        if (modifiedBoard.getTitle() == null) {
+            throw new InvalidDataException("제목을 입력해 주세요.");
+        } else if (modifiedBoard.getContent() == null) {
+            throw new InvalidDataException("내용을 입력해 주세요.");
+        }
+
+        // 수정된 게시글 저장
+        Board updatedBoard = boardRepository.save(board.toBuilder()
+                                .updatedAt(parsedLocalDateTime)
+                                .title(modifiedBoard.getTitle())
+                                .content(modifiedBoard.getContent())
+                                .build()
+        );
+
+        // 첨부된 이미지가 변경되면 기존 이미지 삭제 후 새로 저장
+        if (images != null) {
+            boardFileRepository.deleteAllByBoardCode(updatedBoard.getCode());
+
+            List<BoardFile> addedImages = saveFiles(images, updatedBoard);
+
+            boardRepository.save(updatedBoard.toBuilder()
+                                    .boardFiles(addedImages)
+                                    .build()
+            );
+        }
     }
 }
