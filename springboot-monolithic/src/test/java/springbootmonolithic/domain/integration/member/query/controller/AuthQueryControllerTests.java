@@ -45,7 +45,7 @@ class AuthQueryControllerTests {
 
     @Test
     @DisplayName("이메일 중복 확인 요청 - 중복된 이메일의 경우")
-    void shouldReturnBadRequestForDuplicateEmail() throws Exception {
+    void shouldReturnConflictForDuplicateEmail() throws Exception {
 
         String email = "user1@example.com";
 
@@ -54,7 +54,7 @@ class AuthQueryControllerTests {
                                 .param("email", email)
                                 .accept(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isConflict())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("이미 존재하는 이메일입니다."))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty())
