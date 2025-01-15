@@ -28,8 +28,9 @@ class AuthQueryControllerTests {
         String email = "existinguser@example.com";
 
         mockMvc.perform(
-                get("/api/v1/auth/email-double-check")
+                get("/api/v1/auth/email/check")
                         .param("email", email)
+                        .accept(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
