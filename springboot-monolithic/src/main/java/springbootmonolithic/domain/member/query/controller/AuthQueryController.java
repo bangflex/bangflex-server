@@ -28,12 +28,12 @@ public class AuthQueryController {
     }
 
     @GetMapping("email/check")
-    public ResponseEntity<SuccessResponse<Void>> emailCheck(@RequestParam(name = "email") String email) {
+    public ResponseEntity<SuccessResponse<Boolean>> emailCheck(@RequestParam(name = "email") String email) {
         authQueryService.validateEmail(email);
 
         return ResponseEntity.ok(
                 new SuccessResponse<>(
-                        "사용 가능한 이메일입니다.", null, LocalDateTime.now()
+                        "사용 가능한 이메일입니다.", true, LocalDateTime.now()
                 )
         );
     }

@@ -35,7 +35,7 @@ class AuthQueryControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("사용 가능한 이메일입니다."))
-                .andExpect(jsonPath("$.result").isEmpty())
+                .andExpect(jsonPath("$.result").value(true))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty())
                 .andDo(print());
     }
