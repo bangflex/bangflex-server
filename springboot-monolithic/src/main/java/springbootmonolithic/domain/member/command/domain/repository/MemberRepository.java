@@ -1,4 +1,4 @@
-package springbootmonolithic.domain.member.command.repository;
+package springbootmonolithic.domain.member.command.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;

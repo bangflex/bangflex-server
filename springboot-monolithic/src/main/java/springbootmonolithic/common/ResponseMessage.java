@@ -10,6 +10,6 @@ import lombok.*;
 public class ResponseMessage<T> {
 
     private int status;
-    private String msg;
+    private String message;
     private T result;
 }
