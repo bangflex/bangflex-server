@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "board")
 @Getter
-@Setter
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Board {
@@ -35,7 +35,7 @@ public class Board {
 
     @Column(
             name = "updated_at",
-            nullable = false,
+            nullable = true,
             unique = false
     )
     private String updatedAt;
