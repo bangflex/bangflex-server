@@ -76,4 +76,26 @@ class AuthQueryControllerTests {
                 .andExpect(jsonPath("$.timestamp").isNotEmpty())
                 .andDo(print());
     }
+
+    @DisplayName("이메일 검증 요청 - 올바르지 않은 이메일 형식")
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "plainaddress",            // 도메인 없음
+            "@missingusername.com",    // 사용자명 없음
+            "username@.com",           // 도메인 이름 없음
+            "username@domain..com",    // 연속된 도트
+            // "username@domain"          // 최상위 도메인 없음 - 검증 불가
+    })
+    void shouldReturnBadRequestForInvalidEmailFormat(String invalidEmail) throws Exception {
+        mockMvc.perform(
+                        get("/api/v1/auth/email/validate")
+                                .param("email", invalidEmail)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message", containsString("유효한 이메일 형식이어야 합니다.")))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty())
+                .andDo(print());
+    }
 }
