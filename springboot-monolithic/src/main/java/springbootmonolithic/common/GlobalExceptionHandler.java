@@ -32,7 +32,12 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ErrorResponse> handleBadRequestException(Exception e) {
         logger.error(e.getMessage(), e);
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        String errorMessage = "잘못된 요청입니다.";
+        if (isKnownBadRequestException(e)) {
+            errorMessage = e.getMessage();
+        }
+
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, errorMessage);
     }
 
     // 401: 권한 없는 사용자
@@ -40,6 +45,7 @@ public class GlobalExceptionHandler {
             InvalidMemberException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidUserException(Exception e) {
+        logger.error(e.getMessage(), e);
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
     }
 
@@ -48,6 +54,7 @@ public class GlobalExceptionHandler {
             AccessDeniedException.class
     })
     public ResponseEntity<ErrorResponse> handleForbiddenException(Exception e) {
+        logger.error(e.getMessage(), e);
         return buildErrorResponse(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
     }
 
@@ -57,13 +64,30 @@ public class GlobalExceptionHandler {
             BoardNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        logger.error(e.getMessage(), e);
+        String errorMessage = "정보를 찾을 수 없습니다.";
+        if (isKnownNotFoundRequestException(e)) {
+            errorMessage = e.getMessage();
+        }
+
+        return buildErrorResponse(HttpStatus.NOT_FOUND, errorMessage);
     }
 
     // 500: Internal Server Error (Fallback)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
         logger.error("Unexpected error occurred", e);
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 오류가 발생했습니다.");
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에서 오류가 발생했습니다.");
+    }
+
+
+    private boolean isKnownBadRequestException(Exception e) {
+        return e instanceof InvalidDataException ||
+                e instanceof EmailDuplicatedException;
+    }
+
+    private boolean isKnownNotFoundRequestException(Exception e) {
+        return e instanceof MemberNotFoundException ||
+                e instanceof BoardNotFoundException;
     }
 }
