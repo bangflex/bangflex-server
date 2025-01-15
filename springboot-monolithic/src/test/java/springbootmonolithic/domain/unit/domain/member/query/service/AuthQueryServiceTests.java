@@ -9,10 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import springbootmonolithic.domain.member.query.mapper.AuthMapper;
 import springbootmonolithic.domain.member.query.service.AuthQueryServiceImpl;
-import springbootmonolithic.exception.EmailDuplicatedException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
