@@ -1,4 +1,4 @@
-package springbootmonolithic.domain.unit.domain.member.query.application.service;
+package springbootmonolithic.domain.unit.domain.member.query.service;
 
 
 import org.junit.jupiter.api.DisplayName;
