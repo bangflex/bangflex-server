@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import springbootmonolithic.common.response.ErrorResponse;
@@ -27,6 +28,7 @@ public class GlobalExceptionHandler {
 
     // 400: 잘못된 요청 예외 처리
     @ExceptionHandler({
+            BadRequestException.class,  // base BadRequestException error message
             InvalidDataException.class,
             EmailDuplicatedException.class
     })
@@ -42,6 +44,7 @@ public class GlobalExceptionHandler {
 
     // 401: 권한 없는 사용자
     @ExceptionHandler({
+            AuthenticationException.class,  // base Authentication error message
             InvalidMemberException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidUserException(Exception e) {
@@ -51,7 +54,7 @@ public class GlobalExceptionHandler {
 
     // 403: FORBIDDEN
     @ExceptionHandler({
-            AccessDeniedException.class
+            AccessDeniedException.class,    // base Authorization error message
     })
     public ResponseEntity<ErrorResponse> handleForbiddenException(Exception e) {
         logger.error(e.getMessage(), e);
@@ -60,6 +63,7 @@ public class GlobalExceptionHandler {
 
     // 404: Not Found
     @ExceptionHandler({
+            NotFoundException.class,        // base NotFound error message
             MemberNotFoundException.class,
             BoardNotFoundException.class
     })
