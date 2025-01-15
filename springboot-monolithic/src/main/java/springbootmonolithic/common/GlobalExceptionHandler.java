@@ -33,7 +33,6 @@ public class GlobalExceptionHandler {
             BadRequestException.class,  // base BadRequestException error message
             ConstraintViolationException.class,
             InvalidDataException.class,
-            EmailDuplicatedException.class
     })
     public ResponseEntity<ErrorResponse> handleBadRequestException(Exception e) {
         logger.error(e.getMessage(), e);
@@ -88,6 +87,15 @@ public class GlobalExceptionHandler {
 
         return buildErrorResponse(HttpStatus.NOT_FOUND, errorMessage);
     }
+
+    // 409: Conflict
+    @ExceptionHandler({
+            EmailDuplicatedException.class,
+    })
+    public ResponseEntity<ErrorResponse> handleConflictException(Exception e) {
+            logger.error(e.getMessage(), e);
+            return buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());
+        }
 
     // 500: Internal Server Error (Fallback)
     @ExceptionHandler(Exception.class)
