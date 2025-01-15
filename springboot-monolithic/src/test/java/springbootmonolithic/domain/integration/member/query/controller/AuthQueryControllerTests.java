@@ -30,7 +30,7 @@ class AuthQueryControllerTests {
         String email = "existinguser@example.com";
 
         mockMvc.perform(
-                get("/api/v1/auth/email/check")
+                get("/api/v1/auth/email/validate")
                         .param("email", email)
                         .accept(MediaType.APPLICATION_JSON)
                 )
@@ -49,7 +49,7 @@ class AuthQueryControllerTests {
         String email = "user1@example.com";
 
         mockMvc.perform(
-                        get("/api/v1/auth/email/check")
+                        get("/api/v1/auth/email/validate")
                                 .param("email", email)
                                 .accept(MediaType.APPLICATION_JSON)
                 )
@@ -65,7 +65,7 @@ class AuthQueryControllerTests {
     @ValueSource(strings = {"", "  "})
     void shouldReturnBadRequestForNullEmail(String blankEmail) throws Exception {
         mockMvc.perform(
-                get("/api/v1/auth/email/check")
+                get("/api/v1/auth/email/validate")
                         .param("email", blankEmail)
                         .accept(MediaType.APPLICATION_JSON)
         )

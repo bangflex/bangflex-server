@@ -28,7 +28,7 @@ public class AuthQueryController {
         return "AuthQuery v1 good";
     }
 
-    @GetMapping("/email/check")
+    @GetMapping("/email/validate")
     public ResponseEntity<SuccessResponse<Boolean>> emailCheck(@RequestParam(name = "email") @NotBlank String email) {
         authQueryService.validateEmail(email);
         return ResponseEntity.ok(
