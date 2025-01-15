@@ -2,6 +2,8 @@ package springbootmonolithic.domain.integration.member.query.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +37,7 @@ class AuthQueryControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("사용 가능한 이메일입니다."))
-                .andExpect(jsonPath("$.result").isEmpty())
+                .andExpect(jsonPath("$.result").value(true))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty())
                 .andDo(print());
     }
@@ -58,4 +60,19 @@ class AuthQueryControllerTests {
                 .andDo(print());
     }
 
+    @DisplayName("이메일 중복 확인 요청 - email 파라미터 값 누락된 경우")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "  "})
+    void shouldReturnBadRequestForNullEmail(String blankEmail) throws Exception {
+        mockMvc.perform(
+                get("/api/v1/auth/email/check")
+                        .param("email", blankEmail)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty())
+                .andDo(print());
+    }
 }

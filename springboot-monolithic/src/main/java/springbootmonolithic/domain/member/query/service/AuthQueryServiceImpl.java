@@ -2,6 +2,7 @@ package springbootmonolithic.domain.member.query.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import springbootmonolithic.domain.member.query.mapper.AuthMapper;
 import springbootmonolithic.exception.EmailDuplicatedException;
 
@@ -14,15 +15,11 @@ public class AuthQueryServiceImpl implements AuthQueryService {
         this.authMapper = authMapper;
     }
 
+    @Transactional
     @Override
-    public boolean validateEmail(String email) {
-
-        boolean isEmailDuplicated = checkEmailDuplicated(email);
-
-        if (isEmailDuplicated) {
+    public void validateEmail(String email) {
+        if (checkEmailDuplicated(email)) {
             throw new EmailDuplicatedException("이미 존재하는 이메일입니다.");
-        } else {
-            return true;
         }
     }
 
