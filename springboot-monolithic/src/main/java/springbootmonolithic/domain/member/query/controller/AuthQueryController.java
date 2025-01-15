@@ -36,9 +36,11 @@ public class AuthQueryController {
             authQueryService.validateEmail(email);
 
             return ResponseEntity.ok(
-                    new SuccessResponse<>(
-                            "사용 가능한 이메일입니다.", true, LocalDateTime.now()
-                    )
+                    SuccessResponse.<Boolean>builder()
+                            .message("사용 가능한 이메일입니다.")
+                            .result(true)
+                            .timestamp(LocalDateTime.now())
+                            .build()
             );
         }
     }
