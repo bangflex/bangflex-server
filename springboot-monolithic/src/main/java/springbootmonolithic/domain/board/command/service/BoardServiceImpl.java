@@ -11,8 +11,6 @@ import springbootmonolithic.domain.board.command.dto.BoardCreateDTO;
 import springbootmonolithic.domain.board.command.dto.BoardUpdateDTO;
 import springbootmonolithic.domain.board.command.repository.BoardFileRepository;
 import springbootmonolithic.domain.board.command.repository.BoardRepository;
-import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;
-import springbootmonolithic.domain.member.command.repository.MemberRepository;
 import springbootmonolithic.exception.BoardNotFoundException;
 import springbootmonolithic.exception.InvalidDataException;
 import springbootmonolithic.exception.InvalidMemberException;
@@ -34,17 +32,14 @@ public class BoardServiceImpl implements BoardService {
     private final ModelMapper modelMapper;
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
-    private final MemberRepository memberRepository;
 
     @Autowired
     public BoardServiceImpl(ModelMapper modelMapper,
                             BoardRepository boardRepository,
-                            BoardFileRepository boardFileRepository,
-                            MemberRepository memberRepository) {
+                            BoardFileRepository boardFileRepository) {
         this.modelMapper = modelMapper;
         this.boardRepository = boardRepository;
         this.boardFileRepository = boardFileRepository;
-        this.memberRepository = memberRepository;
     }
 
     String parsedLocalDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
@@ -54,8 +49,6 @@ public class BoardServiceImpl implements BoardService {
     public int createBoard(BoardCreateDTO newBoard, List<MultipartFile> images) throws IOException {
 
         // 작성자가 회원이 아니라면 오류 발생
-        Member author = memberRepository.findById(newBoard.getMemberCode())
-                        .orElseThrow(() -> new MemberNotFoundException("서비스의 회원이 아닙니다."));
 
         // 제목이나 내용이 null이면 오류 발생
         if (newBoard.getTitle() == null) {
@@ -70,7 +63,7 @@ public class BoardServiceImpl implements BoardService {
                         .createdAt(parsedLocalDateTime)
                         .title(newBoard.getTitle())
                         .content(newBoard.getContent())
-                        .member(author)
+//                        .member()     // 작성자 넣기
                         .build();
 
         Board savedBoard = boardRepository.save(board);
