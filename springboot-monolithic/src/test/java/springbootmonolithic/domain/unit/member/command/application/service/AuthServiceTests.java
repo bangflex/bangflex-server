@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 class AuthServiceTests {
 
     @Mock
-    private MemberRepository memberRepository;
+    private MemberMapper memberMapper;
 
     @InjectMocks
     private AuthService authService;
@@ -27,7 +27,7 @@ class AuthServiceTests {
 
         // given
         String duplicatedEmail = "test@test.com";
-        when(memberRepository.existsByEmail(duplicatedEmail).thenReturn(true));
+        when(memberMapper.isExistsByEmail(duplicatedEmail).thenReturn(true));
 
         // when
         boolean result = authService.isEmailDuplicated(duplicatedEmail);
