@@ -39,15 +39,7 @@ public class GlobalExceptionHandler {
         String errorMessage = "잘못된 요청입니다.";
 
         if (isKnownBadRequestException(e)) {
-            if (e instanceof ConstraintViolationException cve) {
-                errorMessage = cve.getConstraintViolations()
-                        .stream()
-                        .findFirst()
-                        .map(ConstraintViolation::getMessage)
-                        .orElse(errorMessage);
-            } else {
-                errorMessage = e.getMessage();
-            }
+            errorMessage = e.getMessage();
         }
 
         return buildErrorResponse(HttpStatus.BAD_REQUEST, errorMessage);

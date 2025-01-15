@@ -25,7 +25,7 @@ class AuthQueryControllerTests {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("이메일 중복 확인 요청 - 중복되지 않은 이메일의 경우")
+    @DisplayName("이메일 검증 요청 - 성공")
     void shouldReturnOkForNonDuplicateEmail() throws Exception {
 
         String email = "existinguser@example.com";
@@ -44,7 +44,7 @@ class AuthQueryControllerTests {
     }
 
     @Test
-    @DisplayName("이메일 중복 확인 요청 - 중복된 이메일의 경우")
+    @DisplayName("이메일 검증 요청 - 중복된 이메일의 경우")
     void shouldReturnConflictForDuplicateEmail() throws Exception {
 
         String email = "user1@example.com";
@@ -61,7 +61,7 @@ class AuthQueryControllerTests {
                 .andDo(print());
     }
 
-    @DisplayName("이메일 중복 확인 요청 - email 파라미터 값 누락된 경우")
+    @DisplayName("이메일 검증 요청 - email 파라미터 값 누락된 경우")
     @ParameterizedTest
     @ValueSource(strings = {"", "  "})
     void shouldReturnBadRequestForNullEmail(String blankEmail) throws Exception {
