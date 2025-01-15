@@ -1,5 +1,6 @@
 package springbootmonolithic.common;
 
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -8,7 +9,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import springbootmonolithic.common.response.ErrorResponse;
 import springbootmonolithic.exception.*;
 
@@ -30,13 +30,13 @@ public class GlobalExceptionHandler {
     // 400: 잘못된 요청 예외 처리
     @ExceptionHandler({
             BadRequestException.class,  // base BadRequestException error message
-            HandlerMethodValidationException.class,
+            ConstraintViolationException.class,
             InvalidDataException.class,
-            EmailDuplicatedException.class
     })
     public ResponseEntity<ErrorResponse> handleBadRequestException(Exception e) {
         logger.error(e.getMessage(), e);
         String errorMessage = "잘못된 요청입니다.";
+
         if (isKnownBadRequestException(e)) {
             errorMessage = e.getMessage();
         }
@@ -79,6 +79,15 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.NOT_FOUND, errorMessage);
     }
 
+    // 409: Conflict
+    @ExceptionHandler({
+            EmailDuplicatedException.class,
+    })
+    public ResponseEntity<ErrorResponse> handleConflictException(Exception e) {
+            logger.error(e.getMessage(), e);
+            return buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());
+        }
+
     // 500: Internal Server Error (Fallback)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
@@ -89,6 +98,7 @@ public class GlobalExceptionHandler {
 
     private boolean isKnownBadRequestException(Exception e) {
         return e instanceof InvalidDataException ||
+                e instanceof ConstraintViolationException ||
                 e instanceof EmailDuplicatedException;
     }
 

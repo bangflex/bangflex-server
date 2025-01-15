@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,13 +25,13 @@ class AuthQueryControllerTests {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("이메일 중복 확인 요청 - 중복되지 않은 이메일의 경우")
+    @DisplayName("이메일 검증 요청 - 성공")
     void shouldReturnOkForNonDuplicateEmail() throws Exception {
 
         String email = "existinguser@example.com";
 
         mockMvc.perform(
-                get("/api/v1/auth/email/check")
+                get("/api/v1/auth/email/validate")
                         .param("email", email)
                         .accept(MediaType.APPLICATION_JSON)
                 )
@@ -43,35 +44,35 @@ class AuthQueryControllerTests {
     }
 
     @Test
-    @DisplayName("이메일 중복 확인 요청 - 중복된 이메일의 경우")
-    void shouldReturnBadRequestForDuplicateEmail() throws Exception {
+    @DisplayName("이메일 검증 요청 - 중복된 이메일의 경우")
+    void shouldReturnConflictForDuplicateEmail() throws Exception {
 
         String email = "user1@example.com";
 
         mockMvc.perform(
-                        get("/api/v1/auth/email/check")
+                        get("/api/v1/auth/email/validate")
                                 .param("email", email)
                                 .accept(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isConflict())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("이미 존재하는 이메일입니다."))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty())
                 .andDo(print());
     }
 
-    @DisplayName("이메일 중복 확인 요청 - email 파라미터 값 누락된 경우")
+    @DisplayName("이메일 검증 요청 - email 파라미터 값 누락된 경우")
     @ParameterizedTest
     @ValueSource(strings = {"", "  "})
     void shouldReturnBadRequestForNullEmail(String blankEmail) throws Exception {
         mockMvc.perform(
-                get("/api/v1/auth/email/check")
+                get("/api/v1/auth/email/validate")
                         .param("email", blankEmail)
                         .accept(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.message", containsString("이메일은 필수 입력 항목입니다.")))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty())
                 .andDo(print());
     }
