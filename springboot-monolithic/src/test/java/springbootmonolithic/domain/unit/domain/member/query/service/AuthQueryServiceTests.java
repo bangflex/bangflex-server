@@ -9,10 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import springbootmonolithic.domain.member.query.mapper.AuthMapper;
 import springbootmonolithic.domain.member.query.service.AuthQueryServiceImpl;
-import springbootmonolithic.exception.EmailDuplicatedException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,17 +28,18 @@ class AuthQueryServiceTests {
 
         // given
         String duplicatedEmail = "test@test.com";
-        when(authMapper.isExistsByEmail(duplicatedEmail)).thenThrow(new EmailDuplicatedException("이미 존재하는 이메일입니다."));
+        when(authMapper.isExistsByEmail(duplicatedEmail)).thenReturn(true);
 
-        // when & then
-        assertThatThrownBy(() -> authQueryService.checkEmailDuplicated(duplicatedEmail))
-                .isInstanceOf(EmailDuplicatedException.class)
-                .hasMessageContaining("이미 존재하는 이메일입니다.");
+        // when
+        boolean result = authQueryService.checkEmailDuplicated(duplicatedEmail);
+
+        // then
+        assertThat(result).isTrue();
     }
 
     @DisplayName("이메일 중복 체크 - 이메일 중복이 아닌 경우")
     @Test
-    void shouldReturnFalseWhenEmailIsDuplicated() {
+    void shouldReturnFalseWhenEmailIsNotDuplicated() {
 
         // given
         String nonDuplicatedEmail = "test@test.com";

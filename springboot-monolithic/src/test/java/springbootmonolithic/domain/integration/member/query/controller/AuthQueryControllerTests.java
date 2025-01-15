@@ -35,7 +35,7 @@ class AuthQueryControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("사용 가능한 이메일입니다."))
-                .andExpect(jsonPath("$.result").isEmpty())
+                .andExpect(jsonPath("$.result").value(true))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty())
                 .andDo(print());
     }
@@ -58,4 +58,18 @@ class AuthQueryControllerTests {
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("이메일 중복 확인 요청 - email 파라미터 값 누락")
+    void shouldReturnBadRequestForNullEmail() throws Exception {
+        mockMvc.perform(
+                get("/api/v1/auth/email/check")
+                        .param("email", "")
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty())
+                .andDo(print());
+    }
 }
