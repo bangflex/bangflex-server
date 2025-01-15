@@ -9,12 +9,11 @@ import springbootmonolithic.domain.board.command.domain.aggregate.entity.Board;
 import springbootmonolithic.domain.board.command.domain.aggregate.entity.BoardFile;
 import springbootmonolithic.domain.board.command.dto.BoardCreateDTO;
 import springbootmonolithic.domain.board.command.dto.BoardUpdateDTO;
-import springbootmonolithic.domain.board.command.repository.BoardFileRepository;
-import springbootmonolithic.domain.board.command.repository.BoardRepository;
+import springbootmonolithic.domain.board.command.domain.repository.BoardFileRepository;
+import springbootmonolithic.domain.board.command.domain.repository.BoardRepository;
 import springbootmonolithic.exception.BoardNotFoundException;
 import springbootmonolithic.exception.InvalidDataException;
 import springbootmonolithic.exception.InvalidMemberException;
-import springbootmonolithic.exception.MemberNotFoundException;
 
 import java.io.IOException;
 import java.nio.file.Files;
