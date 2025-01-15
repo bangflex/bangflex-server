@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Service
+@Service("boardServiceCommand")
 public class BoardServiceImpl implements BoardService {
 
     private final ModelMapper modelMapper;
