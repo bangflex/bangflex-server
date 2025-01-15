@@ -1,5 +1,6 @@
 package springbootmonolithic.domain.member.query.controller;
 
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springbootmonolithic.common.response.SuccessResponse;
 import springbootmonolithic.domain.member.query.service.AuthQueryService;
-import springbootmonolithic.exception.BadRequestException;
 
 import java.time.LocalDateTime;
 
@@ -29,17 +29,14 @@ public class AuthQueryController {
     }
 
     @GetMapping("/email/check")
-    public ResponseEntity<SuccessResponse<Boolean>> emailCheck(@RequestParam(name = "email") String email) {
-        if (email == null || email.isEmpty()) {
-            throw new BadRequestException("Email is required");
-        } else {
-            authQueryService.validateEmail(email);
-
-            return ResponseEntity.ok(
-                    new SuccessResponse<>(
-                            "사용 가능한 이메일입니다.", true, LocalDateTime.now()
-                    )
-            );
-        }
+    public ResponseEntity<SuccessResponse<Boolean>> emailCheck(@RequestParam(name = "email") @NotBlank String email) {
+        authQueryService.validateEmail(email);
+        return ResponseEntity.ok(
+                SuccessResponse.<Boolean>builder()
+                        .message("사용 가능한 이메일입니다.")
+                        .result(true)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
     }
 }

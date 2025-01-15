@@ -2,6 +2,8 @@ package springbootmonolithic.domain.integration.member.query.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -58,12 +60,13 @@ class AuthQueryControllerTests {
                 .andDo(print());
     }
 
-    @Test
-    @DisplayName("이메일 중복 확인 요청 - email 파라미터 값 누락")
-    void shouldReturnBadRequestForNullEmail() throws Exception {
+    @DisplayName("이메일 중복 확인 요청 - email 파라미터 값 누락된 경우")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "  "})
+    void shouldReturnBadRequestForNullEmail(String blankEmail) throws Exception {
         mockMvc.perform(
                 get("/api/v1/auth/email/check")
-                        .param("email", "")
+                        .param("email", blankEmail)
                         .accept(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isBadRequest())
