@@ -1,5 +1,7 @@
 package springbootmonolithic.common;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -8,7 +10,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import springbootmonolithic.common.response.ErrorResponse;
 import springbootmonolithic.exception.*;
 
@@ -30,15 +31,24 @@ public class GlobalExceptionHandler {
     // 400: 잘못된 요청 예외 처리
     @ExceptionHandler({
             BadRequestException.class,  // base BadRequestException error message
-            HandlerMethodValidationException.class,
+            ConstraintViolationException.class,
             InvalidDataException.class,
             EmailDuplicatedException.class
     })
     public ResponseEntity<ErrorResponse> handleBadRequestException(Exception e) {
         logger.error(e.getMessage(), e);
         String errorMessage = "잘못된 요청입니다.";
+
         if (isKnownBadRequestException(e)) {
-            errorMessage = e.getMessage();
+            if (e instanceof ConstraintViolationException cve) {
+                errorMessage = cve.getConstraintViolations()
+                        .stream()
+                        .findFirst()
+                        .map(ConstraintViolation::getMessage)
+                        .orElse(errorMessage);
+            } else {
+                errorMessage = e.getMessage();
+            }
         }
 
         return buildErrorResponse(HttpStatus.BAD_REQUEST, errorMessage);
@@ -89,6 +99,7 @@ public class GlobalExceptionHandler {
 
     private boolean isKnownBadRequestException(Exception e) {
         return e instanceof InvalidDataException ||
+                e instanceof ConstraintViolationException ||
                 e instanceof EmailDuplicatedException;
     }
 
