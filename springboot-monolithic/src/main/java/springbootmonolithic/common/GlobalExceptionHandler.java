@@ -8,6 +8,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import springbootmonolithic.common.response.ErrorResponse;
 import springbootmonolithic.exception.*;
 
@@ -29,6 +30,7 @@ public class GlobalExceptionHandler {
     // 400: 잘못된 요청 예외 처리
     @ExceptionHandler({
             BadRequestException.class,  // base BadRequestException error message
+            HandlerMethodValidationException.class,
             InvalidDataException.class,
             EmailDuplicatedException.class
     })
