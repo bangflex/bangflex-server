@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import springbootmonolithic.domain.member.command.domain.aggregate.entity.compositekey.MemberRolePK;
 
 @Entity
@@ -13,6 +14,7 @@ import springbootmonolithic.domain.member.command.domain.aggregate.entity.compos
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class MemberRole {
     @Id
     @Column(name = "member_code")
