@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "member")
 @Getter
@@ -65,4 +67,57 @@ public class Member {
             unique = false
     )
     private String image;
+
+    // 테스트 전용 생성자
+    public Member(
+            int code,
+            String email,
+            String password,
+            String nickname,
+            String image
+    ) {
+        this.code = code;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.image = image;
+    }
+
+    private Member(
+            int code,
+            boolean active,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt,
+            String email,
+            String password,
+            String nickname,
+            String image
+    ) {
+        this.code = code;
+        this.active = active;
+        this.createdAt = createdAt.toString();
+        this.updatedAt = updatedAt.toString();
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.image = image;
+    }
+
+    public static Member createMember(
+            String email,
+            String encodedPassword,
+            String nickname,
+            String image
+    ) {
+        return new Member(
+                0,
+                true,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                email,
+                encodedPassword,
+                nickname,
+                image
+        );
+    }
 }
