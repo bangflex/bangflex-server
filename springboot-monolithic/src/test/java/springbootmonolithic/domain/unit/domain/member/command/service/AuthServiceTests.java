@@ -75,7 +75,12 @@ class AuthServiceTests {
         // then
         verify(authQueryService).validateEmail(signUpRequestDTO.getEmail());
         verify(passwordEncoder).encode(signUpRequestDTO.getPassword());
-        verify(memberRepository).save(any(Member.class));
+        verify(memberRepository).save(argThat(member ->
+                member.getEmail().equals(expectedMember.getEmail()) &&
+                        member.getPassword().equals(expectedMember.getPassword()) &&
+                        member.getNickname().equals(expectedMember.getNickname()) &&
+                        member.getImage().equals(expectedMember.getImage())
+        ));
         verify(memberRoleRepository).save(argThat(memberRole ->
                 memberRole.getMemberCode() == expectedMemberRole.getMemberCode() &&
                         memberRole.getRoleCode() == expectedMemberRole.getRoleCode()
