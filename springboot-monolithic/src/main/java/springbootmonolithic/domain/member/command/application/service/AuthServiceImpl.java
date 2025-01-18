@@ -10,12 +10,14 @@ import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member
 import springbootmonolithic.domain.member.command.domain.repository.MemberRepository;
 import springbootmonolithic.domain.member.command.domain.repository.MemberRoleRepository;
 import springbootmonolithic.domain.member.query.service.AuthQueryService;
+import springbootmonolithic.domain.member.query.service.MemberQueryService;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     private final MemberRepository memberRepository;
     private final MemberRoleRepository memberRoleRepository;
+    private final MemberQueryService memberQueryService;
     private final AuthQueryService authQueryService;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -23,17 +25,21 @@ public class AuthServiceImpl implements AuthService {
     public AuthServiceImpl(
             MemberRepository memberRepository,
             MemberRoleRepository memberRoleRepository,
+            MemberQueryService memberQueryService,
             AuthQueryService authQueryService,
             BCryptPasswordEncoder passwordEncoder
     ) {
         this.memberRepository = memberRepository;
         this.memberRoleRepository = memberRoleRepository;
+        this.memberQueryService = memberQueryService;
         this.authQueryService = authQueryService;
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
     public void signUp(SignUpRequestDTO signupRequestDTO) {
         authQueryService.validateEmail(signupRequestDTO.getEmail());
+        memberQueryService.checkNicknameDuplicated(signupRequestDTO.getNickname());
 
         Member member = memberRepository.save(
                 Member.createMember(
