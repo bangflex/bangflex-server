@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import springbootmonolithic.security.filter.DaoAuthenticationFilter;
 import springbootmonolithic.security.filter.JwtAccessTokenFilter;
@@ -18,20 +19,22 @@ import springbootmonolithic.security.provider.ProviderManager;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-
     private final ProviderManager providerManager;
     private final ObjectMapper objectMapper;
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final AccessDeniedHandler accessDeniedHandler;
 
     @Autowired
     public SecurityConfiguration(
             ProviderManager providerManager,
             ObjectMapper objectMapper,
-            AuthenticationEntryPoint authenticationEntryPoint
+            AuthenticationEntryPoint authenticationEntryPoint,
+            AccessDeniedHandler accessDeniedHandler
     ) {
         this.providerManager = providerManager;
         this.objectMapper = objectMapper;
         this.authenticationEntryPoint = authenticationEntryPoint;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Bean
@@ -43,7 +46,7 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(authorize ->
                 authorize
-//                        .requestMatchers("/**").permitAll()
+//                        .requestMatchers("/**").permitAll()   // for development
                         .requestMatchers("/api/v1/check/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/v1/auth/**").hasRole("USER")
                         .requestMatchers("/swagger-ui/**").permitAll()
@@ -52,8 +55,8 @@ public class SecurityConfiguration {
                 )
 
                 .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(accessDeniedHandler)           // 403 FORBIDDEN
                         .authenticationEntryPoint(authenticationEntryPoint) // 401 UNAUTHORIZED
-//                        .accessDeniedHandler(accessDeniedHandler)           // 403 FORBIDDEN
                 )
 
                 .addFilterBefore(new JwtAccessTokenFilter(providerManager), UsernamePasswordAuthenticationFilter.class)
