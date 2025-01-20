@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Component
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     private static final int STATUS_CODE_401 = HttpServletResponse.SC_UNAUTHORIZED;
+    private static final String AUTHENTICATION_ERROR_MESSAGE = "인증이 필요합니다.";
     private final ObjectMapper objectMapper;
 
     @Autowired
@@ -26,18 +27,18 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        log.error("AuthenticationEntryPointImpl.commence: {}", authException.getMessage());
+        log.error(AUTHENTICATION_ERROR_MESSAGE);
 
         // 응답 헤더 및 상태 코드 설정
         response.setStatus(STATUS_CODE_401);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // ResponseMessage 객체를 JSON으로 변환 후 응답에 작성
+        // ErrorResponse 객체를 JSON으로 변환 후 응답에 작성
         response.getWriter().write(
                 objectMapper.writeValueAsString(
                         ErrorResponse.builder()
-                                .message("인증이 필요합니다.")
+                                .message(AUTHENTICATION_ERROR_MESSAGE)
                                 .timestamp(LocalDateTime.now())
                                 .build()
                 )
