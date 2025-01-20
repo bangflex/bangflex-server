@@ -10,7 +10,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import springbootmonolithic.security.filter.DaoAuthenticationFilter;
+import springbootmonolithic.security.filter.JwtAccessTokenFilter;
 import springbootmonolithic.security.provider.ProviderManager;
 
 @Configuration
@@ -42,8 +44,8 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(authorize ->
                 authorize
 //                        .requestMatchers("/**").permitAll()
-//                        .requestMatchers("/api/v1/check/**").permitAll()
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/check/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/v1/auth/**").hasRole("USER")
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
@@ -54,6 +56,7 @@ public class SecurityConfiguration {
 //                        .accessDeniedHandler(accessDeniedHandler)           // 403 FORBIDDEN
                 )
 
+                .addFilterBefore(new JwtAccessTokenFilter(providerManager), UsernamePasswordAuthenticationFilter.class)
                 .addFilter(new DaoAuthenticationFilter(providerManager, objectMapper));
 
         return http.build();
