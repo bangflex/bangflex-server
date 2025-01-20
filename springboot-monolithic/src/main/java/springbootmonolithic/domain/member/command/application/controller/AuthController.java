@@ -13,7 +13,7 @@ import springbootmonolithic.domain.member.command.application.service.AuthServic
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("api/v1/auth")
 public class AuthController {
     private final AuthService authService;
 
