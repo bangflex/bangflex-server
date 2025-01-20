@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import springbootmonolithic.security.filter.DaoAuthenticationFilter;
 import springbootmonolithic.security.provider.ProviderManager;
@@ -18,14 +19,17 @@ public class SecurityConfiguration {
 
     private final ProviderManager providerManager;
     private final ObjectMapper objectMapper;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
     public SecurityConfiguration(
             ProviderManager providerManager,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            AuthenticationEntryPoint authenticationEntryPoint
     ) {
         this.providerManager = providerManager;
         this.objectMapper = objectMapper;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
@@ -44,6 +48,12 @@ public class SecurityConfiguration {
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
+
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint) // 401 UNAUTHORIZED
+//                        .accessDeniedHandler(accessDeniedHandler)           // 403 FORBIDDEN
+                )
+
                 .addFilter(new DaoAuthenticationFilter(providerManager, objectMapper));
 
         return http.build();
