@@ -28,7 +28,6 @@ public class JwtAccessTokenFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
-        log.debug("authorizationHeader: {}", authorizationHeader);
 
         // 헤더가 있는지 확인
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -38,10 +37,8 @@ public class JwtAccessTokenFilter extends OncePerRequestFilter {
 
             // 인증 성공 시 SecurityContext에 설정
             if (authentication != null && authentication.isAuthenticated()) {
-                log.debug("authentication: {}", authentication);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            log.debug("access token 필터 끝");
         }
         filterChain.doFilter(request, response);
     }
