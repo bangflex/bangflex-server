@@ -46,9 +46,9 @@ public class AuthQueryServiceImpl implements AuthQueryService {
         MemberDTO loginMember = authMapper.selectMemberByEmailWithAuthorities(email);
 
         if (loginMember == null) {
-            throw new UsernameNotFoundException("email이 존재하지 않습니다.");
+            log.debug("사용자를 찾을 수 없습니다.");
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
-        log.debug("loginMember: {}", loginMember);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         for (RoleDTO roleDTO : loginMember.getRoleDTO()) {
             grantedAuthorities.add(new SimpleGrantedAuthority(roleDTO.getRole()));
