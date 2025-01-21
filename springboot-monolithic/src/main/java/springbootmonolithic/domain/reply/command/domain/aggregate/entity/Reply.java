@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import springbootmonolithic.domain.board.command.domain.aggregate.entity.Board;
+import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;
 
 @Entity
 @Table(name = "reply")
@@ -33,7 +35,7 @@ public class Reply {
 
     @Column(
             name = "updated_at",
-            nullable = false,
+            nullable = true,
             unique = false
     )
     private String updatedAt;
@@ -45,17 +47,19 @@ public class Reply {
     )
     private String content;
 
-    @Column(
-            name = "member_code",
-            nullable = false,
-            unique = false
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+                name = "member_code",
+                nullable = false,
+                unique = false
     )
-    private int memberCode;
+    private Member member;
 
-    @Column(
-            name = "board_code",
-            nullable = false,
-            unique = false
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+                name = "board_code",
+                nullable = false,
+                unique = false
     )
-    private int boardCode;
+    private Board board;
 }

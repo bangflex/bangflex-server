@@ -3,6 +3,7 @@ package springbootmonolithic.domain.board.command.domain.aggregate.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;
+import springbootmonolithic.domain.reply.command.domain.aggregate.entity.Reply;
 
 import java.util.List;
 
@@ -65,4 +66,8 @@ public class Board {
     // 첨부파일과의 관계 설정
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<BoardFile> boardFiles;
+
+    // 댓글과의 관계 설정
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Reply> replies;
 }
