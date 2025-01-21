@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 @Slf4j
 public class DaoAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+    private static final String LOGIN_URL = "/api/v1/auth/login";
     private final ProviderManager providerManager;
     private final ObjectMapper objectMapper;
 
@@ -28,7 +29,7 @@ public class DaoAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     ) {
         this.providerManager = providerManager;
         this.objectMapper = objectMapper;
-        this.setFilterProcessesUrl("/api/v1/auth/login");
+        this.setFilterProcessesUrl(LOGIN_URL);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class DaoAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     )
             );
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException("Failed to parse login request", e);
         }
     }
 
