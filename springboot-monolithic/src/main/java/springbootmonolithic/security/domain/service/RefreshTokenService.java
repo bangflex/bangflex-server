@@ -26,11 +26,7 @@ public class RefreshTokenService {
         redisTemplate.opsForValue().set(loginId, refreshToken, expirationTime, TimeUnit.MILLISECONDS);
     }
 
-    public String getRefreshToken(String loginId) {
-        return redisTemplate.opsForValue().get(loginId);
-    }
-    
     public boolean checkRefreshTokenInRedis(String loginId, String refreshToken) {
-        return refreshToken.equals(getRefreshToken(loginId));
+        return refreshToken.equals(redisTemplate.opsForValue().get(loginId));
     }
 }
