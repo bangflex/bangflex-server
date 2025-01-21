@@ -29,11 +29,7 @@ public class RefreshTokenService {
     public String getRefreshToken(String loginId) {
         return redisTemplate.opsForValue().get(loginId);
     }
-
-    public void deleteRefreshToken(String loginId) {
-        redisTemplate.delete(loginId);
-    }
-
+    
     public boolean checkRefreshTokenInRedis(String loginId, String refreshToken) {
         return refreshToken.equals(getRefreshToken(loginId));
     }
