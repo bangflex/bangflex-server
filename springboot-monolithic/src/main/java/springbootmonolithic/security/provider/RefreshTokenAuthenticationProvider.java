@@ -26,7 +26,7 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
             RefreshTokenService refreshTokenService,
             AuthQueryService authService,
             HttpServletResponse response
-            ) {
+    ) {
         this.jwtUtil = jwtUtil;
         this.refreshTokenService = refreshTokenService;
         this.authService = authService;
@@ -37,25 +37,25 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String token = authentication.getCredentials().toString();
         String loginId = jwtUtil.getLoginId(token);
-        if (refreshTokenService.checkRefreshTokenInRedis(loginId, token)) {
-            if (jwtUtil.isTokenValid(token)) {
-                try {
-                    UserDetails savedUser = authService.loadUserByUsername(loginId);
-                    Authentication authResult =  new UsernamePasswordAuthenticationToken(savedUser, savedUser.getPassword(), savedUser.getAuthorities());
-                    String accessToken = jwtUtil.generateAccessToken(authResult);
-                    response.setHeader("Authorization", "Bearer " + accessToken);
 
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("user not found", e);
-                }
-
-                return jwtUtil.getAuthentication(token);
-            } else {
-                throw new IllegalArgumentException("invalid token");
-            }
-        } else {
-            throw new IllegalArgumentException("refresh token not found");
+        if (!refreshTokenService.checkRefreshTokenInRedis(loginId, token)) {
+            throw new IllegalArgumentException("Refresh token not found");
         }
+
+        if (!jwtUtil.isTokenValid(token)) {
+            throw new IllegalArgumentException("Invalid token");
+        }
+
+        try {
+            UserDetails savedUser = authService.loadUserByUsername(loginId);
+            Authentication authResult =  new UsernamePasswordAuthenticationToken(savedUser, savedUser.getPassword(), savedUser.getAuthorities());
+            String accessToken = jwtUtil.generateAccessToken(authResult);
+            response.setHeader("Authorization", "Bearer " + accessToken);
+            return jwtUtil.getAuthentication(token);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("user not found", e);
+        }
+
     }
 
     @Override
