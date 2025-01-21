@@ -14,6 +14,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import springbootmonolithic.security.filter.DaoAuthenticationFilter;
 import springbootmonolithic.security.filter.JwtAccessTokenFilter;
+import springbootmonolithic.security.filter.JwtRefreshTokenFilter;
 import springbootmonolithic.security.provider.ProviderManager;
 
 @Configuration
@@ -60,6 +61,7 @@ public class SecurityConfiguration {
                 )
 
                 .addFilterBefore(new JwtAccessTokenFilter(providerManager), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtRefreshTokenFilter(providerManager, objectMapper), UsernamePasswordAuthenticationFilter.class)
                 .addFilter(new DaoAuthenticationFilter(providerManager, objectMapper));
 
         return http.build();
