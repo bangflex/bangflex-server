@@ -42,7 +42,7 @@ public class AuthQueryServiceImpl implements AuthQueryService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
         MemberDTO loginMember = authMapper.selectMemberByEmailWithAuthorities(email);
 
         if (loginMember == null) {
