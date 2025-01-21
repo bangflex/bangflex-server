@@ -48,6 +48,13 @@ public class JwtUtil {
         );
     }
 
+    public String generateRefreshToken(Authentication authentication) {
+        return createToken(
+                setClaims(authentication),
+                environment.getProperty("token.refresh.expiration_time")
+        );
+    }
+
     private Claims setClaims(Authentication authentication) {
         Claims claims = Jwts.claims().setSubject(authentication.getName());
         claims.put(
