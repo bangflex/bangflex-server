@@ -48,8 +48,12 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(authorize ->
                 authorize
 //                        .requestMatchers("/**").permitAll()   // for development
-                        .requestMatchers("/api/v1/check/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/v1/auth/**").hasRole("USER")
+                        .requestMatchers(
+                                "/api/v1/auth/login",
+                                "/api/v1/auth/signup",
+                                "/api/v1/auth/email/validate").permitAll()
+                        .requestMatchers("/api/v1/check/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/auth/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()

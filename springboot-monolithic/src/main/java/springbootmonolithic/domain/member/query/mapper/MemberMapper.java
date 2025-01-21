@@ -5,4 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface MemberMapper {
     boolean isExistsByNickname(String nickname);
+    boolean isExistsByEmail(String email);
 }

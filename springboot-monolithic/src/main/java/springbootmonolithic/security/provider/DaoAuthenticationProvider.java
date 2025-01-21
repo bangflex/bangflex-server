@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import springbootmonolithic.common.util.JwtUtil;
-import springbootmonolithic.domain.member.query.service.AuthQueryService;
-import springbootmonolithic.security.service.RefreshTokenService;
+import springbootmonolithic.security.domain.service.AuthQueryService;
+import springbootmonolithic.security.domain.service.RefreshTokenService;
 
 @Slf4j
 @Component

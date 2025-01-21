@@ -9,8 +9,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import springbootmonolithic.common.util.JwtUtil;
-import springbootmonolithic.domain.member.query.service.AuthQueryService;
-import springbootmonolithic.security.service.RefreshTokenService;
+import springbootmonolithic.security.domain.service.AuthQueryService;
+import springbootmonolithic.security.domain.service.RefreshTokenService;
 import springbootmonolithic.security.token.JwtAuthenticationRefreshToken;
 
 @Slf4j

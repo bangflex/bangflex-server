@@ -13,7 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import springbootmonolithic.domain.member.query.service.AuthQueryService;
+import springbootmonolithic.security.domain.service.AuthQueryService;
 
 import java.security.Key;
 import java.util.Arrays;

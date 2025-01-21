@@ -11,4 +11,12 @@
                 WHERE M.nickname = #{ nickname }
         )
     </select>
+    <select id="isExistsByEmail" resultType="_boolean" parameterType="string">
+        SELECT
+        EXISTS (
+        SELECT 1
+        FROM member M
+        WHERE M.email = #{ email }
+        )
+    </select>
 </mapper>
