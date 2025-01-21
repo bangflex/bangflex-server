@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface BoardService {
 
-    PageResponse<List<BoardDTO>> getBoardList(String title, String content, int pageNumber, int pageSize);
+    PageResponse<List<BoardDTO>> getBoardList(String word, int pageNumber, int pageSize);
 }

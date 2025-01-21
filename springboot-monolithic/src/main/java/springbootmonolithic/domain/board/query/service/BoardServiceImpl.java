@@ -2,7 +2,6 @@ package springbootmonolithic.domain.board.query.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import springbootmonolithic.common.PageResponse;
 import springbootmonolithic.common.criteria.SearchBoardCriteria;
@@ -25,10 +24,10 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public PageResponse<List<BoardDTO>> getBoardList(String title, String content, int pageNumber, int pageSize) {
+    public PageResponse<List<BoardDTO>> getBoardList(String word, int pageNumber, int pageSize) {
 
         int offset = (pageNumber - 1) * pageSize;
-        SearchBoardCriteria criteria = new SearchBoardCriteria(title, content, pageNumber, pageSize, offset);
+        SearchBoardCriteria criteria = new SearchBoardCriteria(word, pageNumber, pageSize, offset);
 
         List<BoardDTO> boards = boardCustomRepository.findBoardList(criteria);
         int totalCount = boardCustomRepository.getTotalBoardCount(criteria);

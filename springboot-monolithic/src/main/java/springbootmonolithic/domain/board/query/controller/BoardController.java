@@ -35,12 +35,11 @@ public class BoardController {
     @GetMapping("")
     @Operation(summary = "커뮤니티 게시글 목록 조회 API - 페이지네이션")
     public ResponseEntity<SuccessResponse<PageResponse<List<BoardDTO>>>> getBoardList(
-                                            @RequestParam(required = false) String title,
-                                            @RequestParam(required = false) String content,
+                                            @RequestParam(required = false) String word,
                                             @RequestParam (value = "pageNumber", defaultValue = "1") int pageNumber,
                                             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
 
-        PageResponse<List<BoardDTO>> boardList = boardService.getBoardList(title, content, pageNumber, pageSize);
+        PageResponse<List<BoardDTO>> boardList = boardService.getBoardList(word, pageNumber, pageSize);
 
         return ResponseEntity.ok(new SuccessResponse<>("게시글 목록 조회 성공", boardList, LocalDateTime.now()));
     }

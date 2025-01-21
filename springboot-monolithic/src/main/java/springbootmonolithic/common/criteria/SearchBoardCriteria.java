@@ -9,8 +9,7 @@ import lombok.*;
 @ToString
 public class SearchBoardCriteria {
 
-    private String title;                   // 게시글 제목
-    private String content;                 // 게시글 내용
+    private String word;                    // 검색어(제목 또는 내용)
 
     private int pageNumber;                 // 현재 페이지 번호
     private int pageSize;                   // 페이지 크기

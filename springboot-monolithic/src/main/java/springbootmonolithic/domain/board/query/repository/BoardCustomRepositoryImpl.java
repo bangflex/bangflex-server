@@ -26,7 +26,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     public List<BoardDTO> findBoardList(SearchBoardCriteria criteria) {
 
         List<BoardDTO> boardList = queryFactory
-                .select(Projections.fields(BoardDTO.class,
+                .select(Projections.constructor(BoardDTO.class,
                         board.code.as("boardCode"),
                         board.createdAt,
                         member.nickname,
@@ -36,23 +36,22 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         boardFile.url.as("imageFile"),
                         reply.code.count().intValue().as("replyCount")))
                 .from(board)
-                .join(board.member, member).fetchJoin()
-                .join(boardFile.board, board).orderBy(boardFile.code.asc()).limit(1)
-                .join(reply.board, board).fetchJoin()
-                .where(board.active.eq(true))
-                .where(titleLikes(criteria.getTitle()), contentLikes(criteria.getContent()))
+                .leftJoin(board.member, member)
+                .leftJoin(board.boardFiles, boardFile)
+                .leftJoin(board.replies, reply)
+                .where(board.active.eq(true)
+                        .and(reply.active.eq(true).or(reply.isNull()))
+                        .and(resultLikes(criteria.getWord())))
                 .orderBy(board.createdAt.desc())
+                .groupBy(board.code)
                 .fetch();
 
         return boardList;
     }
 
-    private BooleanExpression titleLikes(String title) {
-        return title != null ? board.title.like("%" + title + "%") : null;
-    }
-
-    private BooleanExpression contentLikes(String content) {
-        return content != null ? board.content.like("%" + content + "%") : null;
+    private BooleanExpression resultLikes(String word) {
+        return word != null ? (board.title.like("%" + word + "%")
+                                .or(board.content.like("%" + word + "%"))) : null;
     }
 
     @Override
@@ -61,8 +60,9 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
         Long totalCountLong = queryFactory
                 .select(board.code.count())
                 .from(board)
-                .where(board.active.eq(true))
-                .where(titleLikes(criteria.getTitle()), contentLikes(criteria.getContent()))
+                .where(board.active.eq(true)
+                        .and(resultLikes(criteria.getWord())))
+                .distinct()
                 .fetchOne();
 
         int totalCount = (totalCountLong != null) ? totalCountLong.intValue() : 0;
