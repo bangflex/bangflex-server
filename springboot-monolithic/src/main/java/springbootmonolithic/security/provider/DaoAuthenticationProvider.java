@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import springbootmonolithic.common.util.JwtUtil;
 import springbootmonolithic.domain.member.query.service.AuthQueryService;
+import springbootmonolithic.security.service.RefreshTokenService;
 
 @Slf4j
 @Component
@@ -20,17 +21,20 @@ public class DaoAuthenticationProvider implements AuthenticationProvider {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtUtil jwtUtil;
     private final HttpServletResponse response;
+    private final RefreshTokenService refreshTokenService;
 
     public DaoAuthenticationProvider(
             AuthQueryService authService,
             BCryptPasswordEncoder bCryptPasswordEncoder,
             JwtUtil jwtUtil,
-            HttpServletResponse response
+            HttpServletResponse response,
+            RefreshTokenService refreshTokenService
     ) {
         this.authService = authService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtUtil = jwtUtil;
         this.response = response;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Override
@@ -45,12 +49,12 @@ public class DaoAuthenticationProvider implements AuthenticationProvider {
         } else {
             Authentication authenticationResult = new UsernamePasswordAuthenticationToken(savedUser, savedUser.getPassword(), savedUser.getAuthorities());
 
-//            String refreshToken = jwtUtil.generateRefreshToken(authenticationResult);
+            String refreshToken = jwtUtil.generateRefreshToken(authenticationResult);
             String accessToken = jwtUtil.generateAccessToken(authenticationResult);
 
-//            refreshTokenService.saveRefreshToken(loginId, refreshToken);
+            refreshTokenService.saveRefreshToken(loginId, refreshToken);
             response.setHeader("Authorization", "Bearer " + accessToken);
-//            response.setHeader("Refresh-Token", refreshToken);
+            response.setHeader("Refresh-Token", refreshToken);
 
             return authenticationResult;
         }
