@@ -33,7 +33,7 @@ public class ProviderManager implements AuthenticationManager {
         }
 
         // 인증 실패 예외
-        log.error("Adequate provider not found");
-        throw new NotAuthenticatedException("Adequate provider not found");
+        log.error("suitable provider not found");
+        throw new NotAuthenticatedException("suitable provider not found");
     }
 }
