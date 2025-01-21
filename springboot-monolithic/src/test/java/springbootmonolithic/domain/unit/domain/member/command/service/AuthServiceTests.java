@@ -17,8 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import springbootmonolithic.domain.member.command.domain.repository.MemberRepository;
 import springbootmonolithic.domain.member.query.service.AuthQueryServiceImpl;
 
-import java.lang.reflect.Field;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
