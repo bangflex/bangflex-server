@@ -42,8 +42,8 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                 .where(board.active.eq(true)
                         .and(reply.active.eq(true).or(reply.isNull()))
                         .and(resultLikes(criteria.getWord())))
-                .orderBy(board.createdAt.desc())
                 .groupBy(board.code)
+                .orderBy(board.createdAt.desc())
                 .fetch();
 
         return boardList;
