@@ -36,6 +36,7 @@ class AuthQueryServiceTests {
     @DisplayName("사용자 조회 테스트 - 성공")
     @Test
     void testLoadUserByUsername_Success() {
+
         // given
         String email = "test@example.com";
         MemberDTO mockMember = new MemberDTO();
