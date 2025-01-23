@@ -5,7 +5,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import springbootmonolithic.common.criteria.SearchBoardCriteria;
+import springbootmonolithic.domain.board.command.domain.aggregate.entity.Board;
 import springbootmonolithic.domain.board.query.dto.BoardDTO;
+import springbootmonolithic.domain.board.query.dto.SelectedBoardDTO;
 
 import java.util.List;
 
@@ -42,8 +44,8 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                 .where(board.active.eq(true)
                         .and(reply.active.eq(true).or(reply.isNull()))
                         .and(resultLikes(criteria.getWord())))
-                .orderBy(board.createdAt.desc())
                 .groupBy(board.code)
+                .orderBy(board.createdAt.desc())
                 .fetch();
 
         return boardList;
@@ -68,5 +70,41 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
         int totalCount = (totalCountLong != null) ? totalCountLong.intValue() : 0;
 
         return totalCount;
+    }
+
+    @Override
+    public List<String> findBoardFilesByBoardCode(int boardCode) {
+
+        List<String> fileUrls = queryFactory
+                .select(boardFile.url)
+                .from(boardFile)
+                .where(boardFile.board.code.eq(boardCode))
+                .orderBy(boardFile.code.asc())
+                .fetch();
+
+        return !fileUrls.isEmpty() ? fileUrls : null;
+    }
+
+    @Override
+    public SelectedBoardDTO findBoardByCode(int boardCode) {
+
+        SelectedBoardDTO foundBoard = queryFactory
+                .select(Projections.constructor(SelectedBoardDTO.class,
+                        board.code.as("boardCode"),
+                        board.active,
+                        board.createdAt,
+                        member.nickname,
+                        member.image.as("memberImage"),
+                        board.title,
+                        board.content,
+                        reply.code.count().intValue().as("replyCount")))
+                .from(board)
+                .join(board.member, member)
+                .leftJoin(board.replies, reply)
+                .where(board.code.eq(boardCode)
+                        .and(reply.active.eq(true).or(reply.isNull())))
+                .fetchOne();
+
+        return foundBoard;
     }
 }
