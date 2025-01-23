@@ -23,7 +23,6 @@ public class SelectedBoardDTO {
     private int replyCount;             // 댓글 수
 //    private int likeCount;              // 좋아요 수
 //    private boolean liked;              // 게시글 좋아요 여부
-//    private boolean bookmarked;         // 게시글 스크랩 여부
 
     @QueryProjection
     public SelectedBoardDTO(int boardCode,

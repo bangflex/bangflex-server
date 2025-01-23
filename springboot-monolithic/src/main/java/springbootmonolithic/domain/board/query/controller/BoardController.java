@@ -54,4 +54,10 @@ public class BoardController {
         return ResponseEntity.ok(new SuccessResponse<>(
                                 boardCode + "번 게시글 상세 조회 성공", board, LocalDateTime.now()));
     }
+
+    /*
+    개발 필요:
+    - 로그인한 회원이 작성한 게시글 목록 조회 api,
+    - 로그인한 회원이 좋아요 누른 게시글 목록 조회 api
+    */
 }

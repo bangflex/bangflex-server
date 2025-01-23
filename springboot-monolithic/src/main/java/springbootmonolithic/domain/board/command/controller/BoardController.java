@@ -59,4 +59,9 @@ public class BoardController {
 
         return ResponseEntity.ok(new SuccessResponse<>("게시글 삭제 성공", null, LocalDateTime.now()));
     }
+
+    /*
+    개발 필요:
+    - 게시글 활성화/비활성화 api (관리자만 가능)
+    */
 }

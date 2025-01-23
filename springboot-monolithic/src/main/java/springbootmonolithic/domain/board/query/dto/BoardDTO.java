@@ -18,7 +18,6 @@ public class BoardDTO {
     private String imageFile;           // 첫번째 첨부사진 1장 url
     private int replyCount;             // 댓글 수
 //    private int likeCount;              // 좋아요 수
-//    private boolean bookmarked;         // 게시글 스크랩 여부
 
     @QueryProjection
     public BoardDTO(int boardCode,
