@@ -2,9 +2,9 @@ package springbootmonolithic.common.domain.member.role;
 
 
 public enum RoleType {
-    ADMIN(0, "ADMIN"),
-    MANAGER(1, "MANAGER"),
-    USER(2, "USER")
+    ADMIN(0, "ROLE_ADMIN"),
+    MANAGER(1, "ROLE_MANAGER"),
+    USER(2, "ROLE_USER")
     ;
 
     private final int order;
