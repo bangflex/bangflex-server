@@ -42,7 +42,7 @@ public class DaoAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     )
             );
         } catch (IOException e) {
-            throw new IllegalArgumentException("Failed to parse login request", e);
+            throw new AuthenticationException("Failed to parse login request", e) {};
         }
     }
 
