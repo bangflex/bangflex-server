@@ -57,16 +57,16 @@ public class SecurityConfiguration {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
-                )
+                );
 
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(accessDeniedHandler)           // 403 FORBIDDEN
-                        .authenticationEntryPoint(authenticationEntryPoint) // 401 UNAUTHORIZED
-                )
+            http.exceptionHandling(exception -> exception
+                    .accessDeniedHandler(accessDeniedHandler)           // 403 FORBIDDEN
+                    .authenticationEntryPoint(authenticationEntryPoint) // 401 UNAUTHORIZED
+            );
 
-                .addFilterBefore(new JwtAccessTokenFilter(providerManager), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtRefreshTokenFilter(providerManager, objectMapper), UsernamePasswordAuthenticationFilter.class)
-                .addFilter(new DaoAuthenticationFilter(providerManager, objectMapper));
+            http.addFilterBefore(new JwtAccessTokenFilter(providerManager), UsernamePasswordAuthenticationFilter.class);
+            http.addFilterBefore(new JwtRefreshTokenFilter(providerManager, objectMapper), UsernamePasswordAuthenticationFilter.class);
+            http.addFilter(new DaoAuthenticationFilter(providerManager, objectMapper));
 
         return http.build();
     }
