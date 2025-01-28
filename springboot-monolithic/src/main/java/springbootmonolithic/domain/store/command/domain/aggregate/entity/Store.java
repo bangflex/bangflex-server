@@ -68,11 +68,32 @@ public class Store {
     private String addressDetail;
 
     @Column(
+            name = "area",
+            nullable = true,
+            unique = false
+    )
+    private String area;
+
+    @Column(
+            name = "location",
+            nullable = true,
+            unique = false
+    )
+    private String location;
+
+    @Column(
             name = "page_url",
             nullable = false,
             unique = false
     )
     private String pageUrl;
+
+    @Column(
+            name = "tel",
+            nullable = true,
+            unique = false
+    )
+    private String tel;
 
     @Column(
             name = "image",
