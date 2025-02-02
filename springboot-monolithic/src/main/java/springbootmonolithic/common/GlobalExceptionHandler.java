@@ -82,11 +82,12 @@ public class GlobalExceptionHandler {
     // 409: Conflict
     @ExceptionHandler({
             EmailDuplicatedException.class,
+            NicknameDuplicatedException.class,
     })
     public ResponseEntity<ErrorResponse> handleConflictException(Exception e) {
             logger.error(e.getMessage(), e);
             return buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());
-        }
+    }
 
     // 500: Internal Server Error (Fallback)
     @ExceptionHandler(Exception.class)

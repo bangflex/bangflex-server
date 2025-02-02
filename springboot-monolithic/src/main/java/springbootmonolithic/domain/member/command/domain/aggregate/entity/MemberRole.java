@@ -1,19 +1,20 @@
 package springbootmonolithic.domain.member.command.domain.aggregate.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import springbootmonolithic.domain.member.command.domain.aggregate.entity.compositekey.MemberRolePK;
 
 @Entity
 @Table(name = "member_role")
+@IdClass(MemberRolePK.class)
 @Getter
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class MemberRole {
     @Id
     @Column(name = "member_code")
