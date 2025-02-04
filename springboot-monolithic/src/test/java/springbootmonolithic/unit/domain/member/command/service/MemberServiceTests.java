@@ -17,10 +17,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import springbootmonolithic.domain.member.command.domain.repository.MemberRepository;
 import springbootmonolithic.domain.member.query.service.MemberQueryServiceImpl;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -83,5 +85,41 @@ class MemberServiceTests {
                 memberRole.getMemberCode() == expectedMemberRole.getMemberCode() &&
                         memberRole.getRoleCode() == expectedMemberRole.getRoleCode()
         ));
+    }
+
+    @DisplayName("회원 비활성화")
+    @Test
+    void deactivateMemberBy_Success() {
+        // Given
+        Member mockMember = new Member(
+                1,
+                true,
+                "createdAt",
+                "updatedAt",
+                "test@test.com",
+                "testpw",
+                "testnickname",
+                "testImage"
+        );
+
+        Member expectedMember = new Member(
+                1,
+                false,
+                "createdAt",
+                "updatedAt",
+                "test@test.com",
+                "testpw",
+                "testnickname",
+                "testImage"
+        );
+
+        when(memberRepository.findByCodeAndActiveTrue(mockMember.getCode()))
+                .thenReturn(Optional.of(expectedMember));
+
+        // When
+        memberService.deactivateMemberBy(mockMember.getCode());
+
+        // Then
+        assertThat(mockMember.getCode()).isEqualTo(expectedMember.getCode());
     }
 }
