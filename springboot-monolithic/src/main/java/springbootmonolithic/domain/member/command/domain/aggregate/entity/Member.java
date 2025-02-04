@@ -120,4 +120,8 @@ public class Member {
                 image
         );
     }
+
+    public void deactivate() {
+        this.active = false;
+    }
 }
