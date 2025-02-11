@@ -5,10 +5,10 @@ rule_files:
   - alerts.yml
 
 scrape_configs:
-  - job_name: 'springboot-app'
+  - job_name: 'springboot'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['springboot-app:8080']  # Spring Boot 애플리케이션
+      - targets: ['springboot:8080']  # Spring Boot 애플리케이션
 
   - job_name: 'node-exporter'
     static_configs:
