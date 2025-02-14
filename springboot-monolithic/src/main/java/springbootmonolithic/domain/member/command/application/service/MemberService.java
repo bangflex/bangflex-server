@@ -4,4 +4,5 @@ import springbootmonolithic.domain.member.command.application.dto.request.SignUp
 
 public interface MemberService {
     void signUp(SignUpRequestDTO signupRequestDTO);
+    void deactivateMemberBy(int memberCode);
 }

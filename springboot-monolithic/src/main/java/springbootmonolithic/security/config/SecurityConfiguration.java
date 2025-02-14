@@ -53,6 +53,9 @@ public class SecurityConfiguration {
                                 "/api/v1/auth/signup",
                                 "/api/v1/auth/email/validate").permitAll()
                         .requestMatchers("/api/v1/check/**").hasRole("ADMIN")
+                        
+                        .requestMatchers("/api/v1/super/**").hasAnyRole("ADMIN", "MANAGER")
+
                         .requestMatchers("/api/v1/auth/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()

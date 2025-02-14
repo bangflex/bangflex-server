@@ -10,6 +10,7 @@ import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member
 import springbootmonolithic.domain.member.command.domain.repository.MemberRepository;
 import springbootmonolithic.domain.member.command.domain.repository.MemberRoleRepository;
 import springbootmonolithic.domain.member.query.service.MemberQueryService;
+import springbootmonolithic.exception.InvalidMemberException;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -52,5 +53,12 @@ public class MemberServiceImpl implements MemberService {
                         .roleCode(RoleType.USER.getOrder())
                         .build()
         );
+    }
+
+    @Override
+    public void deactivateMemberBy(int memberCode) {
+        memberRepository.findByCodeAndActiveTrue(memberCode)
+                .orElseThrow(() -> new InvalidMemberException("유효하지 않은 회원입니다."))
+                .deactivate();
     }
 }
