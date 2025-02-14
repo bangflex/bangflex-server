@@ -5,28 +5,27 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import springbootmonolithic.domain.theme.command.domain.aggregate.entity.compositeKey.ThemeGenreId;
+import springbootmonolithic.domain.theme.command.domain.aggregate.entity.compositeKey.ThemeLikeId;
 
 @Entity
-@Table(name = "theme_genre")
-@IdClass(ThemeGenreId.class)
+@Table(name = "theme_like")
+@IdClass(ThemeLikeId.class)
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThemeGenre {
+public class ThemeLike {
     @Id
     @Column(name = "theme_code")
     private int themeCode;
 
     @Id
-    @Column(name = "genre_code")
-    private int genreCode;
+    @Column(name = "member_code")
+    private int memberCode;
 
     @Column(
-            name = "active",
+            name = "created_at",
             nullable = false,
             unique = false
     )
-    private boolean active;
-
+    private String createdAt;
 }

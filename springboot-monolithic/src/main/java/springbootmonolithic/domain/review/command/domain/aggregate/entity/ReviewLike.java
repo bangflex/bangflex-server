@@ -5,18 +5,24 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import springbootmonolithic.domain.review.command.domain.aggregate.entity.compositeKey.ReviewLikeId;
 
 @Entity
-@Table(name = "review_file")
+@Table(name = "review_like")
+@IdClass(ReviewLikeId.class)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewFile {
+public class ReviewLike {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "code")
-    private int code;
+    @Column(name = "review_code")
+    private int reviewCode;
+
+    @Id
+    @Column(name = "member_code")
+    private int memberCode;
 
     @Column(
             name = "created_at",
@@ -24,18 +30,4 @@ public class ReviewFile {
             unique = false
     )
     private String createdAt;
-
-    @Column(
-            name = "url",
-            nullable = false,
-            unique = false
-    )
-    private String url;
-
-    @Column(
-            name = "review_code",
-            nullable = false,
-            unique = false
-    )
-    private int reviewCode;
 }
