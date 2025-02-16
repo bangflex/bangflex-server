@@ -5,12 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import springbootmonolithic.domain.board.command.domain.aggregate.entity.Board;
 import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;
 
 @Entity
 @Table(name = "reply")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Reply {

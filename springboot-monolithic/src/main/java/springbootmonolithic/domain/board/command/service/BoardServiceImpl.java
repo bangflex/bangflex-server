@@ -11,6 +11,7 @@ import springbootmonolithic.domain.board.command.dto.BoardCreateDTO;
 import springbootmonolithic.domain.board.command.dto.BoardUpdateDTO;
 import springbootmonolithic.domain.board.command.domain.repository.BoardFileRepository;
 import springbootmonolithic.domain.board.command.domain.repository.BoardRepository;
+import springbootmonolithic.domain.member.query.service.MemberQueryService;
 import springbootmonolithic.exception.BoardNotFoundException;
 import springbootmonolithic.exception.InvalidDataException;
 import springbootmonolithic.exception.InvalidMemberException;
@@ -31,14 +32,17 @@ public class BoardServiceImpl implements BoardService {
     private final ModelMapper modelMapper;
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
+    private final MemberQueryService memberQueryService;
 
     @Autowired
     public BoardServiceImpl(ModelMapper modelMapper,
                             BoardRepository boardRepository,
-                            BoardFileRepository boardFileRepository) {
+                            BoardFileRepository boardFileRepository,
+                            MemberQueryService memberQueryService) {
         this.modelMapper = modelMapper;
         this.boardRepository = boardRepository;
         this.boardFileRepository = boardFileRepository;
+        this.memberQueryService = memberQueryService;
     }
 
     String parsedLocalDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
