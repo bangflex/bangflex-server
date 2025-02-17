@@ -21,8 +21,8 @@ public class SelectedBoardDTO {
     private String content;             // 내용
     private List<String> imageFiles;    // 첨부사진 목록
     private int replyCount;             // 댓글 수
-//    private int likeCount;              // 좋아요 수
-//    private boolean liked;              // 게시글 좋아요 여부
+    private int likeCount;              // 좋아요 수
+    private boolean liked;              // 게시글 좋아요 여부
 
     @QueryProjection
     public SelectedBoardDTO(int boardCode,
@@ -32,7 +32,8 @@ public class SelectedBoardDTO {
                             String memberImage,
                             String title,
                             String content,
-                            int replyCount) {
+                            int replyCount,
+                            int likeCount) {
         this.boardCode = boardCode;
         this.active = active;
         this.createdAt = createdAt;
@@ -41,5 +42,6 @@ public class SelectedBoardDTO {
         this.title = title;
         this.content = content;
         this.replyCount = replyCount;
+        this.likeCount = likeCount;
     }
 }

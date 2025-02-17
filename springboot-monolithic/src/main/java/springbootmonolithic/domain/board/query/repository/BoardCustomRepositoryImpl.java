@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import springbootmonolithic.common.criteria.SearchBoardCriteria;
 import springbootmonolithic.domain.board.command.domain.aggregate.entity.Board;
+import springbootmonolithic.domain.board.command.domain.aggregate.entity.BoardLike;
 import springbootmonolithic.domain.board.query.dto.BoardDTO;
 import springbootmonolithic.domain.board.query.dto.SelectedBoardDTO;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static springbootmonolithic.domain.board.command.domain.aggregate.entity.QBoard.board;
 import static springbootmonolithic.domain.board.command.domain.aggregate.entity.QBoardFile.boardFile;
+import static springbootmonolithic.domain.board.command.domain.aggregate.entity.QBoardLike.boardLike;
 import static springbootmonolithic.domain.member.command.domain.aggregate.entity.QMember.member;
 import static springbootmonolithic.domain.reply.command.domain.aggregate.entity.QReply.reply;
 
@@ -36,11 +38,13 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         board.title,
                         board.content,
                         boardFile.url.as("imageFile"),
-                        reply.code.count().intValue().as("replyCount")))
+                        reply.code.count().intValue().as("replyCount"),
+                        boardLike.memberCode.count().intValue().as("likeCount")))
                 .from(board)
                 .leftJoin(board.member, member)
                 .leftJoin(board.boardFiles, boardFile)
                 .leftJoin(board.replies, reply)
+                .leftJoin(board.boardLikes, boardLike)
                 .where(board.active.eq(true)
                         .and(reply.active.eq(true).or(reply.isNull()))
                         .and(resultLikes(criteria.getWord())))
@@ -97,14 +101,27 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         member.image.as("memberImage"),
                         board.title,
                         board.content,
-                        reply.code.count().intValue().as("replyCount")))
+                        reply.code.count().intValue().as("replyCount"),
+                        boardLike.memberCode.count().intValue().as("likeCount")))
                 .from(board)
                 .join(board.member, member)
                 .leftJoin(board.replies, reply)
+                .leftJoin(board.boardLikes, boardLike)
                 .where(board.code.eq(boardCode)
                         .and(reply.active.eq(true).or(reply.isNull())))
                 .fetchOne();
 
         return foundBoard;
+    }
+
+    @Override
+    public BoardLike findBoardLikeByBoardCodeAndMemberCode(int boardCode, int loginMemberCode) {
+
+        BoardLike liked = queryFactory.selectFrom(boardLike)
+                .where(boardLike.board.code.eq(boardCode)
+                        .and(boardLike.memberCode.eq(loginMemberCode)))
+                .fetchOne();
+
+        return liked;
     }
 }

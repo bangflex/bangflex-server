@@ -10,5 +10,5 @@ public interface BoardService {
 
     PageResponse<List<BoardDTO>> getBoardList(String word, int pageNumber, int pageSize);
 
-    SelectedBoardDTO getBoard(int boardCode);
+    SelectedBoardDTO getBoard(int boardCode, int loginMemberCode);
 }

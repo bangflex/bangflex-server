@@ -2,6 +2,7 @@ package springbootmonolithic.domain.board.query.repository;
 
 import org.springframework.stereotype.Repository;
 import springbootmonolithic.common.criteria.SearchBoardCriteria;
+import springbootmonolithic.domain.board.command.domain.aggregate.entity.BoardLike;
 import springbootmonolithic.domain.board.query.dto.BoardDTO;
 import springbootmonolithic.domain.board.query.dto.SelectedBoardDTO;
 
@@ -17,4 +18,6 @@ public interface BoardCustomRepository {
     List<String> findBoardFilesByBoardCode(int boardCode);
 
     SelectedBoardDTO findBoardByCode(int boardCode);
+
+    BoardLike findBoardLikeByBoardCodeAndMemberCode(int boardCode, int loginMemberCode);
 }

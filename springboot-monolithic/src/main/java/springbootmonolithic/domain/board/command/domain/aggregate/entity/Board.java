@@ -70,4 +70,8 @@ public class Board {
     // 댓글과의 관계 설정
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Reply> replies;
+
+    // 게시글 좋아요와의 관계 설정
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<BoardLike> boardLikes;
 }

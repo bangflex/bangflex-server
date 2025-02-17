@@ -14,8 +14,13 @@ import springbootmonolithic.domain.board.command.domain.aggregate.entity.composi
 public class BoardLike {
 
     @Id
-    @Column(name = "board_code")
-    private int boardCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+                name = "board_code",
+                nullable = false,
+                unique = false
+    )
+    private Board board;
 
     @Id
     @Column(name = "member_code")

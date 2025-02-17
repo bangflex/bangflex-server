@@ -36,7 +36,7 @@ public class BoardController {
                                 " / word에 검색어 넣으면 해당 검색어가 포함된 제목이나 내용의 게시글 목록만 반환")
     public ResponseEntity<SuccessResponse<PageResponse<List<BoardDTO>>>> getBoardList(
                                             @RequestParam(required = false) String word,
-                                            @RequestParam (value = "pageNumber", defaultValue = "1") int pageNumber,
+                                            @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
                                             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
 
         PageResponse<List<BoardDTO>> boardList = boardService.getBoardList(word, pageNumber, pageSize);
@@ -47,9 +47,10 @@ public class BoardController {
     @GetMapping("/{boardCode}")
     @Operation(summary = "커뮤니티 게시글 상세 조회 API",
                 description = "게시글 코드로 해당 게시글 1개 상세 조회")
-    public ResponseEntity<SuccessResponse<SelectedBoardDTO>> getBoard(@PathVariable int boardCode) {
+    public ResponseEntity<SuccessResponse<SelectedBoardDTO>> getBoard(@PathVariable int boardCode,
+                                                                      @RequestParam int loginMemberCode) {
 
-        SelectedBoardDTO board = boardService.getBoard(boardCode);
+        SelectedBoardDTO board = boardService.getBoard(boardCode, loginMemberCode);     // 로그인 적용 시 수정 필요
 
         return ResponseEntity.ok(new SuccessResponse<>(
                                 boardCode + "번 게시글 상세 조회 성공", board, LocalDateTime.now()));

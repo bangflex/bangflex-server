@@ -1,6 +1,7 @@
 package springbootmonolithic.domain.board.command.domain.aggregate.entity.compositeKey;
 
 import lombok.*;
+import springbootmonolithic.domain.board.command.domain.aggregate.entity.Board;
 
 import java.io.Serializable;
 
@@ -9,6 +10,6 @@ import java.io.Serializable;
 public class BoardLikeId implements Serializable {
     // 게시글별 좋아요 복합키 클래스
 
-    private int boardCode;
+    private Board board;
     private int memberCode;
 }

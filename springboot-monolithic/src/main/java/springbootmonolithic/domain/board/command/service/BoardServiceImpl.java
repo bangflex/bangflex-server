@@ -11,6 +11,8 @@ import springbootmonolithic.domain.board.command.dto.BoardCreateDTO;
 import springbootmonolithic.domain.board.command.dto.BoardUpdateDTO;
 import springbootmonolithic.domain.board.command.domain.repository.BoardFileRepository;
 import springbootmonolithic.domain.board.command.domain.repository.BoardRepository;
+import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;
+import springbootmonolithic.domain.member.query.dto.MemberInformationDTO;
 import springbootmonolithic.domain.member.query.service.MemberQueryService;
 import springbootmonolithic.exception.BoardNotFoundException;
 import springbootmonolithic.exception.InvalidDataException;
@@ -51,7 +53,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public int createBoard(BoardCreateDTO newBoard, List<MultipartFile> images) throws IOException {
 
-        // 작성자가 회원이 아니라면 오류 발생
+        MemberInformationDTO memberInfo = memberQueryService.getMemberInformationByEmail(newBoard.getEmail());
 
         // 제목이나 내용이 null이면 오류 발생
         if (newBoard.getTitle() == null) {
@@ -66,7 +68,7 @@ public class BoardServiceImpl implements BoardService {
                         .createdAt(parsedLocalDateTime)
                         .title(newBoard.getTitle())
                         .content(newBoard.getContent())
-//                        .member()     // 작성자 넣기
+                        .member(modelMapper.map(memberInfo, Member.class))
                         .build();
 
         Board savedBoard = boardRepository.save(board);

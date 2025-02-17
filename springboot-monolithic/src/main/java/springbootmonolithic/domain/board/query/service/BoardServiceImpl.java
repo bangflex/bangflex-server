@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import springbootmonolithic.common.PageResponse;
 import springbootmonolithic.common.criteria.SearchBoardCriteria;
+import springbootmonolithic.domain.board.command.domain.aggregate.entity.BoardLike;
 import springbootmonolithic.domain.board.query.dto.BoardDTO;
 import springbootmonolithic.domain.board.query.dto.SelectedBoardDTO;
 import springbootmonolithic.domain.board.query.repository.BoardCustomRepository;
@@ -27,6 +28,7 @@ public class BoardServiceImpl implements BoardService{
         this.boardCustomRepository = boardCustomRepository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PageResponse<List<BoardDTO>> getBoardList(String word, int pageNumber, int pageSize) {
 
@@ -40,8 +42,9 @@ public class BoardServiceImpl implements BoardService{
         return response;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public SelectedBoardDTO getBoard(int boardCode) {
+    public SelectedBoardDTO getBoard(int boardCode, int loginMemberCode) {
 
         // 첨부 이미지 목록 먼저 조회
         List<String> boardFiles = boardCustomRepository.findBoardFilesByBoardCode(boardCode);
@@ -51,6 +54,14 @@ public class BoardServiceImpl implements BoardService{
             throw new InvalidDataException("존재하지 않는 게시글입니다.");
         } else if (!selectedBoard.isActive()) {
             throw new BoardNotFoundException("삭제된 게시글입니다.");
+        }
+
+        // 좋아요 했는지 여부 체크
+        BoardLike boardLike = boardCustomRepository.findBoardLikeByBoardCodeAndMemberCode(boardCode, loginMemberCode);
+        if (boardLike != null) {
+            selectedBoard.setLiked(true);
+        } else {
+            selectedBoard.setLiked(false);
         }
 
         // 조회해온 게시글 DTO에 조회한 이미지 목록 set

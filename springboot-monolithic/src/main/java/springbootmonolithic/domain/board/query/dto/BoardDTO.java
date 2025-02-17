@@ -17,7 +17,7 @@ public class BoardDTO {
     private String content;             // 내용
     private String imageFile;           // 첫번째 첨부사진 1장 url
     private int replyCount;             // 댓글 수
-//    private int likeCount;              // 좋아요 수
+    private int likeCount;              // 좋아요 수
 
     @QueryProjection
     public BoardDTO(int boardCode,
@@ -27,7 +27,8 @@ public class BoardDTO {
                     String title,
                     String content,
                     String imageFile,
-                    int replyCount) {
+                    int replyCount,
+                    int likeCount) {
         this.boardCode = boardCode;
         this.createdAt = createdAt;
         this.nickname = nickname;
@@ -36,5 +37,6 @@ public class BoardDTO {
         this.content = content;
         this.imageFile = imageFile;
         this.replyCount = replyCount;
+        this.likeCount = likeCount;
     }
 }
