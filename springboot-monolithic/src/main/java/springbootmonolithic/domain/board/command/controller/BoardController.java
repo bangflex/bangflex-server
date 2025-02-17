@@ -63,5 +63,16 @@ public class BoardController {
     /*
     개발 필요:
     - 게시글 활성화/비활성화 api (관리자만 가능)
+    - 게시글 좋아요 취소
     */
+
+    @PostMapping("/{boardCode}/add-like")
+    @Operation(summary = "커뮤니티 게시글 좋아요 등록 API")
+    public ResponseEntity<SuccessResponse<Object>> addLikeBoard(@PathVariable int boardCode,
+                                                                @RequestParam int memberCode) {
+
+        boardService.addLikeBoard(boardCode, memberCode);       // 로그인 적용 시 수정 필요
+
+        return ResponseEntity.ok(new SuccessResponse<>("게시글 좋아요 등록 성공", null, LocalDateTime.now()));
+    }
 }

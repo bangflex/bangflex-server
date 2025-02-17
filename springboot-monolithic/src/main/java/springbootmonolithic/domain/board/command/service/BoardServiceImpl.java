@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import springbootmonolithic.domain.board.command.domain.aggregate.entity.Board;
 import springbootmonolithic.domain.board.command.domain.aggregate.entity.BoardFile;
+import springbootmonolithic.domain.board.command.domain.aggregate.entity.BoardLike;
+import springbootmonolithic.domain.board.command.domain.aggregate.entity.compositeKey.BoardLikeId;
+import springbootmonolithic.domain.board.command.domain.repository.BoardLikeRepository;
 import springbootmonolithic.domain.board.command.dto.BoardCreateDTO;
 import springbootmonolithic.domain.board.command.dto.BoardUpdateDTO;
 import springbootmonolithic.domain.board.command.domain.repository.BoardFileRepository;
@@ -14,6 +17,7 @@ import springbootmonolithic.domain.board.command.domain.repository.BoardReposito
 import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;
 import springbootmonolithic.domain.member.query.dto.MemberInformationDTO;
 import springbootmonolithic.domain.member.query.service.MemberQueryService;
+import springbootmonolithic.exception.AlreadyLikedException;
 import springbootmonolithic.exception.BoardNotFoundException;
 import springbootmonolithic.exception.InvalidDataException;
 import springbootmonolithic.exception.InvalidMemberException;
@@ -34,16 +38,19 @@ public class BoardServiceImpl implements BoardService {
     private final ModelMapper modelMapper;
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
+    private final BoardLikeRepository boardLikeRepository;
     private final MemberQueryService memberQueryService;
 
     @Autowired
     public BoardServiceImpl(ModelMapper modelMapper,
                             BoardRepository boardRepository,
                             BoardFileRepository boardFileRepository,
+                            BoardLikeRepository boardLikeRepository,
                             MemberQueryService memberQueryService) {
         this.modelMapper = modelMapper;
         this.boardRepository = boardRepository;
         this.boardFileRepository = boardFileRepository;
+        this.boardLikeRepository = boardLikeRepository;
         this.memberQueryService = memberQueryService;
     }
 
@@ -184,5 +191,23 @@ public class BoardServiceImpl implements BoardService {
                                 .active(false)
                                 .updatedAt(parsedLocalDateTime)
                                 .build());
+    }
+
+    @Transactional
+    @Override
+    public void addLikeBoard(int boardCode, int memberCode) {
+
+        // 존재하지 않거나 이미 삭제된 게시글이면 오류 발생
+        Board board = boardRepository.findById(boardCode)
+                .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시글입니다."));
+
+        if (!board.isActive()) throw new BoardNotFoundException("삭제된 게시글입니다.");
+
+        // 해당 게시글의 좋아요를 이미 눌렀다면 오류 발생
+        if (boardLikeRepository.existsByBoardCodeAndMemberCode(boardCode, memberCode))
+            throw new AlreadyLikedException("이미 좋아요를 누른 게시글입니다.");
+
+        BoardLike boardLike = new BoardLike(board, memberCode, parsedLocalDateTime);
+        boardLikeRepository.save(boardLike);
     }
 }

@@ -14,4 +14,6 @@ public interface BoardService {
     void updateBoard(int boardCode, BoardUpdateDTO modifiedBoard, List<MultipartFile> images) throws IOException;
 
     void deleteBoard(int boardCode, int memberCode);
+
+    void addLikeBoard(int boardCode, int memberCode);
 }

@@ -32,6 +32,7 @@ public class GlobalExceptionHandler {
             BadRequestException.class,  // base BadRequestException error message
             ConstraintViolationException.class,
             InvalidDataException.class,
+            AlreadyLikedException.class
     })
     public ResponseEntity<ErrorResponse> handleBadRequestException(Exception e) {
         logger.error(e.getMessage(), e);
