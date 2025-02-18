@@ -17,10 +17,7 @@ import springbootmonolithic.domain.board.command.domain.repository.BoardReposito
 import springbootmonolithic.domain.member.command.domain.aggregate.entity.Member;
 import springbootmonolithic.domain.member.query.dto.MemberInformationDTO;
 import springbootmonolithic.domain.member.query.service.MemberQueryService;
-import springbootmonolithic.exception.AlreadyLikedException;
-import springbootmonolithic.exception.BoardNotFoundException;
-import springbootmonolithic.exception.InvalidDataException;
-import springbootmonolithic.exception.InvalidMemberException;
+import springbootmonolithic.exception.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -209,5 +206,22 @@ public class BoardServiceImpl implements BoardService {
 
         BoardLike boardLike = new BoardLike(board, memberCode, parsedLocalDateTime);
         boardLikeRepository.save(boardLike);
+    }
+
+    @Transactional
+    @Override
+    public void cancelLikeBoard(int boardCode, int memberCode) {
+
+        // 존재하지 않거나 이미 삭제된 게시글이면 오류 발생
+        Board board = boardRepository.findById(boardCode)
+                .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시글입니다."));
+
+        if (!board.isActive()) throw new BoardNotFoundException("삭제된 게시글입니다.");
+
+        // 해당 게시글의 좋아요를 누른 적이 없으면 오류 발생
+        BoardLike boardLike = boardLikeRepository.findByBoardCodeAndMemberCode(boardCode, memberCode);
+        if (boardLike == null) throw new NotFoundException("좋아요를 누른 적이 없는 게시글입니다.");
+
+        boardLikeRepository.delete(boardLike);
     }
 }

@@ -16,4 +16,6 @@ public interface BoardService {
     void deleteBoard(int boardCode, int memberCode);
 
     void addLikeBoard(int boardCode, int memberCode);
+
+    void cancelLikeBoard(int boardCode, int memberCode);
 }

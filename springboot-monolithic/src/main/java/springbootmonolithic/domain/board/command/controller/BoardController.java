@@ -75,4 +75,14 @@ public class BoardController {
 
         return ResponseEntity.ok(new SuccessResponse<>("게시글 좋아요 등록 성공", null, LocalDateTime.now()));
     }
+
+    @DeleteMapping("/{boardCode}/cancel-like")
+    @Operation(summary = "커뮤니티 게시글 좋아요 취소 API")
+    public ResponseEntity<SuccessResponse<Object>> cancelLikeBoard(@PathVariable int boardCode,
+                                                                   @RequestParam int memberCode) {
+
+        boardService.cancelLikeBoard(boardCode, memberCode);
+
+        return ResponseEntity.ok(new SuccessResponse<>("게시글 좋아요 취소 성공", null, LocalDateTime.now()));
+    }
 }

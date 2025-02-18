@@ -7,4 +7,6 @@ import springbootmonolithic.domain.board.command.domain.aggregate.entity.composi
 public interface BoardLikeRepository extends JpaRepository<BoardLike, BoardLikeId> {
 
     boolean existsByBoardCodeAndMemberCode(int boardCode, int memberCode);
+
+    BoardLike findByBoardCodeAndMemberCode(int boardCode, int memberCode);
 }
